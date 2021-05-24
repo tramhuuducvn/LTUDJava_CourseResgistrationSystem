@@ -109,13 +109,14 @@ create table ChiTiet (
   ngaythu int,
   cahoc int,
   mssv char(12)
+  -- primary key(namhoc, hocky, mamonhoc, phonghoc, ngaythu, cahoc, mssv)
 );
 
 create table DangKy (
   namhochientai int,
   hockyhientai char(3),
-  thoigianbatdaudangky datetime,
-  thoigianketthucdangky datetime,
+  thoigianbatdaudangky timestamp,
+  thoigianketthucdangky timestamp,
   primary key(namhochientai, hockyhientai)
 );
 
