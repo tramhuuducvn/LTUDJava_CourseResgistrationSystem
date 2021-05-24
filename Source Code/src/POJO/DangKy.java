@@ -1,26 +1,37 @@
 package POJO;
 
 import java.io.*;
-import java.sql.*;
-
 import javax.persistence.*;
 
 @Entity
 @Table(name = "DangKy")
-@IdClass(HocKyPK.class)
-public class DangKy {
+public class DangKy implements Serializable{
 	@Id
-	@Column(name = "namhochientai")
-	private int namhochientai;
-	@Id
-	@Column(name = "hockyhientai", length = 3)
-	private String hockyhientai;
+	@Column(name = "mathongtin")
+	private int mathongtin;
 	
-	@Column(name = "thoigianbatdaudangky")
-	private Timestamp thoigianbatdaudangky;
-	@Column(name = "thoigianketthucdangky")
-	private Timestamp thoigianketthucdangky;
-//--------------------------------------------------------------
+	@Column(name = "namhoc")
+	private int namhoc;
+	@Column(name = "hocky", length = 3)
+	private String hocky;
+	@Column(name = "mamonhoc", length = 10)
+	private String mamonhoc;
+	@Column(name = "giaovien", length = 50)
+	private String giaovien;
+	@Column(name = "phonghoc", length = 5)
+	private String phonghoc;
+	@Column(name = "ngaythu")
+	private int ngaythu;
+	@Column(name = "cahoc")
+	private int cahoc;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinColumn(name = "mssv")
+	private String mssv;
+	//Method-----------------------------------------------------
+	
+	
+	//-----------------------------------------------------------
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 

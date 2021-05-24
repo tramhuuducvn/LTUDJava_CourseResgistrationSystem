@@ -1,13 +1,19 @@
 file này ghi lại lịch sử các hoạt động xảy ra bên trong kho chứa
 em mới dùng github nên cũng không biết chụp chổ nào nên vào đây
 ghi lại lịch sử từng ngày làm những gì cho project
-trong file ảnh có cả ngày giờ của hệ điều hành rõ ràng ạ
+trong file ảnh có cả ngày giờ của hệ điều hành rõ ràng ạ.
+Có thể coi đây là tiến độ làm việc cá nhân
 
-1.png 23h49m ngày 21/05/2021 
+1.png: 23h49m ngày 21/05/2021 
 --> tạo kho chứa các thư mục quan trọng, commit thí nghiệm
-2.png 7h11m ngày 23/05/2021 
+
+2.png: 7h11m ngày 23/05/2021 
 --> setup file setup_database.sql, tạo bảng ràng buộc...
- và mô hình entity relationship
-3.png 16h13m ngày 23/05/2021 
+và mô hình entity relationship
+
+3.png: 16h13m ngày 23/05/2021 
 --> tạo project maven đầu tiên, cấu hình file pom.xml, chạy thử ví 
-dụ mẫu để test tính ổn định
+dụ mẫu
+
+4.png: 20h00 ngày 24/05/2021
+--> hoàn thành các lớp POJO

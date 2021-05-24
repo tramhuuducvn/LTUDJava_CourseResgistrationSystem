@@ -19,7 +19,7 @@ public class SinhVien implements Serializable{
 	@Column(name = "matkhau", length = 50)
 	private String matkhau;
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "malop")
+	@JoinColumn(name = "lop")
 	private LopHoc lop;
 	@Column(name = "email", length = 50)
 	private String email;

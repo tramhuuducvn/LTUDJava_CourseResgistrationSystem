@@ -1,73 +1,24 @@
----> Giải thích Cơ sở dữ liệu
-
-/*
-+ Giáo vụ: 
-	- magv: primary key, char(12) -- mỗi giáo vụ có một mã duy nhất để phân biệt với các giáo vụ khác
-	- họ tên: nvachar(50)
-	- tài khoản: duy nhất, char(50) -- mỗi giáo vụ có một tên tài khoản duy nhất
-	- mật khẩu: char(50)
-
-+ Sinh viên: 
-	- mssv: primary key, char(12) -- mỗi sinh viên có một mã số sinh viên duy nhất để phần biệt với các sinh viên khác
-	- họ tên: nvachar(50)
-	- giới tính: nam hoặc nữ
-	- tài khoản: duy nhất, char(50) -- tài khoản là duy nhất
-	- mật khẩu: char(50)
-	- lớp: char(7)
-	- email: duy nhất, char(50)
-
-+ Học kỳ:
-	- mã học kỳ: char(3) ví dụ HK1, HK2,... -- mã học kỳ là duy nhất để phân biệt với các học kỳ khác trong cùng năm học
-	- năm học: int
-	- ngày bắt đầu: date
-	- ngày kết thúc: date
-	~primary key(năm học, mã học kỳ) 
-
-+ Lớp học:
-	- mã lớp: char(7), primary key -- mỗi lớp có một mã duy nhất
-	- sỉ số: int, thuộc tính suy diễn
-	- sỉ số nam: int, thuộc tính suy diễn
-	- sỉ số nữ: int, thuộc tính suy diễn
-
-+ Môn học:
-	- mã môn học: char(10), primary key -- mỗi môn học có một mã duy nhất
-	- tên môn học: nvachar(100)
-	- số tín chỉ: int
-
--- Học kỳ đó sẽ có môn học nào?
--- Môn đó học ở phòng nào, mấy giờ, thứ mấy trong tuần?
--- Môn đó thì có sinh viên nào học? 
--- Bảng sau sẽ làm việc đó
--- Bảng sẽ tự động thêm, cập nhật, xóa và sửa khi sinh viên đăng ký học phần
-+ Chi tiết: -- thực thể yếu
-	- năm học: int
-	- mã học kỳ: char(3)
-	- mã môn học: char(10)
-	- giáo viên: nvarchar(50)
-	- slot: int
-	- phòng học: char(5)
-	- ngày thứ: int phạm vi giá trị chỉ trong  (2, 3, 4, 5, 6) quy ước thứ 7, cn nghĩ nên ko xét
-	- ca học: int phạm vi giá trị chỉ trong (1,2,3,4)
-	- mssv đăng ký học: char(12)
-	-- Quy ước là mỗi (năm học, học kỳ, môn học, phòng học, ca học) có duy nhất một giáo viên dạy và số slots duy nhất
-	-- nhưng có thể có nhiều sinh viên học ở bảng quan hệ này hầu như là cả một là khóa chính 
-
-+ Đăng ký: -- bảng này chỉ chứa duy nhất một bộ, hay một dòng vì chỉ có duy nhất một học kỳ của một năm học nào đó được đặt làm học kỳ hiện tại
-	- năm học hiện tại: int
-	- học kỳ hiện tại: char(3)
-	- thời gian bắt đầu đăng ký học phần: date time
-	- thời gian kết thúc đăng ký học phần: date time
-*/
-
 create database CourseRegistrationSystem;
 
+-- drop table DangKy;
+-- drop table SinhVien;
+-- drop table LopHoc;
+-- drop table GiaoVu;
+-- drop table HocKy;
+-- drop table MonHoc;
+-- drop table LichHoc;
+
+-- mỗi giáo vụ có một magv để phân biệt với các giáo vụ khác và taikhoan là duy nhất
 create table GiaoVu (
-  magv char(12) primary key,
+  magv char(12) primary key, 
   hoten nvarchar(50),
   taikhoan char(50),
-  matkhau char(50)
+  matkhau char(50),
+  unique(taikhoan)
 );
 
+-- mỗi sinh viên có một mssv để phân biệt với các giáo vụ khác và taikhoan là duy nhất
+-- và thuộc về duy nhất một lớp học nào đó
 create table SinhVien (
   mssv char(12) primary key,
   hoten nvarchar(50),
@@ -75,9 +26,11 @@ create table SinhVien (
   taikhoan char(50),
   matkhau char(50),
   lop char(7),
-  email char(50)
+  email char(50),
+  unique(taikhoan)
 );
 
+-- học kỳ có các mã học kỳ để phân biệt với các học kỳ khác trong cùng một năm học
 create table HocKy (
   namhoc int,
   mahocky char(3),
@@ -86,6 +39,7 @@ create table HocKy (
   primary key(namhoc, mahocky)
 );
 
+-- mỗi lớp học có một mã lớp để phân biệt và có ít nhất một sinh viên
 create table LopHoc (
   malop char(7) primary key,
   siso int,
@@ -93,18 +47,28 @@ create table LopHoc (
   sisonu  int
 );
 
+-- mỗi môn học có một mã môn học riêng để phân biệt
 create table MonHoc (
   mamonhoc char(10) primary key,
   tenmonhoc nvarchar(100),
   sotinchi int
 );
 
-create table ChiTiet (
+create table LichHoc(
+	ngaythu int, -- thứ 2, 3, 4, 5, 6, 7 không học chủ nhật
+	cahoc int, -- ca 1(7h30-9h30), 2(9h30-11h30), 3(13h30-15h30), 4(15h30-17h30) hết
+	phonghoc char(5),
+	slots int,
+	primary key (ngaythu, cahoc, phonghoc)
+);
+-- cứ mỗi thông tin đăng ký sẽ có một mã thông tin để phân biệt
+-- mục đich là giảm số thuộc tính của khóa chính
+create table DangKy (
+	mathongtin int primary key,
   namhoc int,
   hocky char(3),
   mamonhoc char(10),
   giaovien nvarchar(50),
-  slot int,
   phonghoc char(5),
   ngaythu int,
   cahoc int,
@@ -112,18 +76,12 @@ create table ChiTiet (
   -- primary key(namhoc, hocky, mamonhoc, phonghoc, ngaythu, cahoc, mssv)
 );
 
-create table DangKy (
-  namhochientai int,
-  hockyhientai char(3),
-  thoigianbatdaudangky timestamp,
-  thoigianketthucdangky timestamp,
-  primary key(namhochientai, hockyhientai)
-);
-
 alter table SinhVien add constraint FK_SV_LOP foreign key(lop) references LopHoc(malop);
-alter table ChiTiet add constraint FK_CT_SV foreign key(mssv) references SinhVien(mssv);
-alter table ChiTiet add constraint FK_CT_HK foreign key(namhoc, hocky) references HocKy(namhoc, mahocky);
-alter table ChiTiet add constraint FK_CT_MH foreign key(mamonhoc) references MonHoc(mamonhoc);
+alter table DangKy add constraint FK_DK_SV foreign key(mssv) references SinhVien(mssv);
+alter table DangKy add constraint FK_DK_HK foreign key(namhoc, hocky) references HocKy(namhoc, mahocky);
+alter table DangKy add constraint FK_DK_MH foreign key(mamonhoc) references MonHoc(mamonhoc);
+alter table DangKy add constraint FK_DK_LH foreign key(ngaythu, cahoc, phonghoc) references LichHoc(ngaythu, cahoc, phonghoc);
+
 
 -- lưu ý các thông tin sau chỉ mang mục đích học thuật, tham khảo và thí dụ
 -- thông tin được lấy ngẫu nhiên từ file excel của các bảng điểm môn học em đã học được thầy cô chia sẻ cho lớp
@@ -163,8 +121,14 @@ insert into MonHoc(mamonhoc, tenmonhoc, sotinchi) values
 ('PPLTHDT', N'Phương pháp lập trình hướng đối tượng', 4),
 ('LTUDJAVA', N'Lập trình ứng dụng Java', 4);
 
-insert into DangKy(namhochientai, hockyhientai, thoigianbatdaudangky, thoigianketthucdangky) values
-(2020, 'HK2', '2020-06-15 09:00:00', '2020-06-20 18:00:00');
+insert into LichHoc(ngaythu, cahoc, phonghoc, slots) values
+(2, 1, 'E102', 100),
+(3, 2, 'G102', 50),
+(4, 1, 'F207', 70),
+(5, 3, 'E302', 100),
+(6, 4, 'F207', 70),
+(7, 1, 'E102', 100),
+(7, 2, 'G102', 50);
 
 update LopHoc
 set siso = (select count(mssv) from SinhVien where lop = '19CTT1' group by lop)
