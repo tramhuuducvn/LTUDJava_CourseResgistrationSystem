@@ -1,8 +1,4 @@
-file này ghi lại lịch sử các hoạt động xảy ra bên trong kho chứa
-em mới dùng github nên cũng không biết chụp chổ nào nên vào đây
-ghi lại lịch sử từng ngày làm những gì cho project
-trong file ảnh có cả ngày giờ của hệ điều hành rõ ràng ạ.
-Có thể coi đây là tiến độ làm việc cá nhân
+----------------LỊCH SỬ COMMIT VÀ TIẾN ĐỘ CÔNG VIỆC---------------------------
 
 1.png: 23h49m ngày 21/05/2021 
 --> tạo kho chứa các thư mục quan trọng, commit thí nghiệm
@@ -17,3 +13,6 @@ dụ mẫu
 
 4.png: 20h00 ngày 24/05/2021
 --> hoàn thành các lớp POJO
+
+5.png: 23h11 ngày 24/05/2021
+--> chỉnh sửa lại database, mô hình ER, chỉnh sửa các lại các lớp POJO

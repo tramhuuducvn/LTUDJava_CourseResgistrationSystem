@@ -2,9 +2,10 @@ package POJO;
 
 import java.io.*;
 import javax.persistence.*;
+import java.util.*;
 
 @Entity
-@Table(name = "Lophoc")
+@Table(name = "LopHoc")
 public class LopHoc implements Serializable{
 	// Attribute----------------------------------------------
 	@Id
@@ -18,7 +19,48 @@ public class LopHoc implements Serializable{
 	@Column(name = "sisonu")
 	private int sisonu;
 	
+	@OneToMany(mappedBy = "lop")
+	private Set<SinhVien> DanhSachSinhVien;
 	// Method-------------------------------------------------
+	public String getMalop() {
+		return malop;
+	}
+
+	public void setMalop(String malop) {
+		this.malop = malop;
+	}
+
+	public int getSiso() {
+		return siso;
+	}
+
+	public void setSiso(int siso) {
+		this.siso = siso;
+	}
+
+	public int getSisonam() {
+		return sisonam;
+	}
+
+	public void setSisonam(int sisonam) {
+		this.sisonam = sisonam;
+	}
+
+	public int getSisonu() {
+		return sisonu;
+	}
+
+	public void setSisonu(int sisonu) {
+		this.sisonu = sisonu;
+	}
+
+	public Set<SinhVien> getDanhSachSinhVien() {
+		return DanhSachSinhVien;
+	}
+
+	public void setDanhSachSinhVien(Set<SinhVien> danhSachSinhVien) {
+		DanhSachSinhVien = danhSachSinhVien;
+	}
 	
 	public static void main(String[] args) {
 		System.out.println("Hello World");

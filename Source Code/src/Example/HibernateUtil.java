@@ -5,6 +5,7 @@ import org.hibernate.*;
 import org.hibernate.boot.registry.*;
 import org.hibernate.cfg.*;
 import org.hibernate.service.*;
+import POJO.*;
 
 
 public class HibernateUtil {
@@ -14,12 +15,19 @@ public class HibernateUtil {
         Properties pros = new Properties();
         pros.put(Environment.DIALECT, "org.hibernate.dialect.MySQLDialect");
         pros.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-        pros.put(Environment.URL, "jdbc:mysql://localhost:3306/test");
+//        pros.put(Environment.URL, "jdbc:mysql://localhost:3306/test");
+        pros.put(Environment.URL, "jdbc:mysql://localhost:3306/CourseRegistrationSystem");
         pros.put(Environment.USER, "tramhuuduc");
         pros.put(Environment.PASS, "19120484@Ubuntu");
                 
         conf.setProperties(pros);
-        conf.addAnnotatedClass(Student.class);
+        conf.addAnnotatedClass(GiaoVu.class);
+        conf.addAnnotatedClass(SinhVien.class);
+        conf.addAnnotatedClass(HocKy.class);
+        conf.addAnnotatedClass(LopHoc.class);
+        conf.addAnnotatedClass(MonHoc.class);
+        conf.addAnnotatedClass(LichHoc.class);
+        conf.addAnnotatedClass(DangKy.class);
         
         ServiceRegistry registry = new StandardServiceRegistryBuilder()
                            .applySettings(conf.getProperties()).build();

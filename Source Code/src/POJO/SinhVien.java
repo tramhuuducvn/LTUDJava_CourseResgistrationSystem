@@ -1,6 +1,7 @@
 package POJO;
 
 import java.io.*;
+import java.util.*;
 import javax.persistence.*;
 
 @Entity
@@ -14,16 +15,31 @@ public class SinhVien implements Serializable{
 	private String hoten;
 	@Column(name = "gioitinh", length = 3)
 	private String gioitinh;
-	@Column(name = "taikhoan", length = 50)
+	@Column(name = "taikhoan", length = 50, unique = true)
 	private String taikhoan; 
 	@Column(name = "matkhau", length = 50)
 	private String matkhau;
+	
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "lop")
 	private LopHoc lop;
+	
 	@Column(name = "email", length = 50)
 	private String email;
+	
+	@ManyToMany
+	@JoinTable(
+		name = "DangKy",
+		joinColumns = @JoinColumn(name = "mssv"),
+		inverseJoinColumns = @JoinColumn(name = "mathongtin")
+	)
+	private Set<LichHoc> DanhSachLichHoc;
+	
+	
+	
 //----------------------------------------------------------------------
+	
+//-----------------------------------------------------------------
 	public String getMssv() {
 		return mssv;
 	}
@@ -79,10 +95,20 @@ public class SinhVien implements Serializable{
 	public void setEmail(String email) {
 		this.email = email;
 	}
-//-----------------------------------------------------------------
+
+	public Set<LichHoc> getDanhSachLichHoc() {
+		return DanhSachLichHoc;
+	}
+
+	public void setDanhSachLichHoc(Set<LichHoc> danhSachLichHoc) {
+		DanhSachLichHoc = danhSachLichHoc;
+	}
+	public String toString() {
+		return this.mssv + "_" + this.hoten;
+	}
+	//--------------------------------------
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 
 	}
-
 }

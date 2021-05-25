@@ -5,34 +5,10 @@ import java.util.*;
 
 import javax.persistence.*;
 
-
-class HocKyPK{
-	private int namhoc;
-	private String mahocky;
-	
-	public HocKyPK(int year, String seme) {
-		this.namhoc = year;
-		this.mahocky = seme;
-	}
-	
-	public int getNamhoc() {
-		return namhoc;
-	}
-	public void setNamhoc(int namhoc) {
-		this.namhoc = namhoc;
-	}
-	public String getMahocky() {
-		return mahocky;
-	}
-	public void setMahocky(String mahocky) {
-		this.mahocky = mahocky;
-	}
-}
-
 @Entity
 @Table(name = "HocKy")
 @IdClass(HocKyPK.class)
-public class HocKy {
+public class HocKy implements Serializable{
 	@Id
 	@Column(name = "namhoc")
 	private int namhoc;
@@ -45,8 +21,54 @@ public class HocKy {
 	@Column(name = "ngayketthuc")
 	private Date ngayketthuc;
 	
+	@OneToMany(mappedBy = "hocky")
+	private Set<LichHoc> ThongTinLichHoc;
 	
-//-----------------------------------------------------------
+	public int getNamhoc() {
+		return namhoc;
+	}
+
+	public void setNamhoc(int namhoc) {
+		this.namhoc = namhoc;
+	}
+
+	public String getMahocky() {
+		return mahocky;
+	}
+
+	public void setMahocky(String mahocky) {
+		this.mahocky = mahocky;
+	}
+
+	public Date getNgaybatdau() {
+		return ngaybatdau;
+	}
+
+	public void setNgaybatdau(Date ngaybatdau) {
+		this.ngaybatdau = ngaybatdau;
+	}
+
+	public Date getNgayketthuc() {
+		return ngayketthuc;
+	}
+
+	public void setNgayketthuc(Date ngayketthuc) {
+		this.ngayketthuc = ngayketthuc;
+	}
+
+	public Set<LichHoc> getThongTinLichHoc() {
+		return ThongTinLichHoc;
+	}
+
+	public void setThongTinLichHoc(Set<LichHoc> thongTinLichHoc) {
+		ThongTinLichHoc = thongTinLichHoc;
+	}
+	
+	public String toString() {
+		return this.namhoc + " - " + this.mahocky;
+	}
+	
+	//-----------------------------------------------------------
 	public static void main(String[] args) {
 		System.out.println("Hello World");
 	}

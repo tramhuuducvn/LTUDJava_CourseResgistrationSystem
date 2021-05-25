@@ -54,16 +54,14 @@ create table MonHoc (
   sotinchi int
 );
 
-create table LichHoc(
-	ngaythu int, -- thứ 2, 3, 4, 5, 6, 7 không học chủ nhật
-	cahoc int, -- ca 1(7h30-9h30), 2(9h30-11h30), 3(13h30-15h30), 4(15h30-17h30) hết
-	phonghoc char(5),
-	slots int,
-	primary key (ngaythu, cahoc, phonghoc)
+create table DangKy(
+	mathongtin int,
+  mssv char(12),
+  primary key(mathongtin, mssv)
 );
 -- cứ mỗi thông tin đăng ký sẽ có một mã thông tin để phân biệt
 -- mục đich là giảm số thuộc tính của khóa chính
-create table DangKy (
+create table LichHoc (
 	mathongtin int primary key,
   namhoc int,
   hocky char(3),
@@ -72,15 +70,14 @@ create table DangKy (
   phonghoc char(5),
   ngaythu int,
   cahoc int,
-  mssv char(12)
-  -- primary key(namhoc, hocky, mamonhoc, phonghoc, ngaythu, cahoc, mssv)
+  slots int
 );
 
 alter table SinhVien add constraint FK_SV_LOP foreign key(lop) references LopHoc(malop);
 alter table DangKy add constraint FK_DK_SV foreign key(mssv) references SinhVien(mssv);
-alter table DangKy add constraint FK_DK_HK foreign key(namhoc, hocky) references HocKy(namhoc, mahocky);
-alter table DangKy add constraint FK_DK_MH foreign key(mamonhoc) references MonHoc(mamonhoc);
-alter table DangKy add constraint FK_DK_LH foreign key(ngaythu, cahoc, phonghoc) references LichHoc(ngaythu, cahoc, phonghoc);
+alter table DangKy add constraint FK_DK_LH foreign key(mathongtin) references LichHoc(mathongtin);
+alter table LichHoc add constraint FK_LH_HK foreign key(namhoc, hocky) references HocKy(namhoc, mahocky);
+alter table LichHoc add constraint FK_LH_MH foreign key(mamonhoc) references MonHoc(mamonhoc);
 
 
 -- lưu ý các thông tin sau chỉ mang mục đích học thuật, tham khảo và thí dụ
@@ -120,15 +117,6 @@ insert into MonHoc(mamonhoc, tenmonhoc, sotinchi) values
 ('CSDL', N'Cơ sở dữ liệu', 4),
 ('PPLTHDT', N'Phương pháp lập trình hướng đối tượng', 4),
 ('LTUDJAVA', N'Lập trình ứng dụng Java', 4);
-
-insert into LichHoc(ngaythu, cahoc, phonghoc, slots) values
-(2, 1, 'E102', 100),
-(3, 2, 'G102', 50),
-(4, 1, 'F207', 70),
-(5, 3, 'E302', 100),
-(6, 4, 'F207', 70),
-(7, 1, 'E102', 100),
-(7, 2, 'G102', 50);
 
 update LopHoc
 set siso = (select count(mssv) from SinhVien where lop = '19CTT1' group by lop)

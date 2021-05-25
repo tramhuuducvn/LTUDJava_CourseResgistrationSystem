@@ -5,31 +5,15 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "DangKy")
+@IdClass(DangKyPK.class)
 public class DangKy implements Serializable{
 	@Id
 	@Column(name = "mathongtin")
 	private int mathongtin;
-	
-	@Column(name = "namhoc")
-	private int namhoc;
-	@Column(name = "hocky", length = 3)
-	private String hocky;
-	@Column(name = "mamonhoc", length = 10)
-	private String mamonhoc;
-	@Column(name = "giaovien", length = 50)
-	private String giaovien;
-	@Column(name = "phonghoc", length = 5)
-	private String phonghoc;
-	@Column(name = "ngaythu")
-	private int ngaythu;
-	@Column(name = "cahoc")
-	private int cahoc;
-	
-	@ManyToMany(fetch = FetchType.EAGER)
+	@Id
 	@JoinColumn(name = "mssv")
 	private String mssv;
-	//Method-----------------------------------------------------
-	
+	//Method-----------------------------------------------------	
 	
 	//-----------------------------------------------------------
 	public static void main(String[] args) {

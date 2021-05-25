@@ -12,7 +12,7 @@ public class GiaoVu implements Serializable {
 	private String magv;
 	@Column (name = "hoten", length = 50)
 	private String hoten;
-	@Column (name = "taikhoan", length = 50)
+	@Column (name = "taikhoan", length = 50, unique = true)
 	private String taikhoan;
 	@Column (name = "matkhau", length = 50)
 	private String matkhau;
