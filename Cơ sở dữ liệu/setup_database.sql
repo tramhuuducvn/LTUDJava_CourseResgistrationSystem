@@ -118,6 +118,21 @@ insert into MonHoc(mamonhoc, tenmonhoc, sotinchi) values
 ('PPLTHDT', N'Phương pháp lập trình hướng đối tượng', 4),
 ('LTUDJAVA', N'Lập trình ứng dụng Java', 4);
 
+insert into LichHoc(mathongtin, namhoc, hocky, mamonhoc, giaovien, phonghoc, ngaythu, cahoc, slots) values
+(1, 2020, 'HK1', 'THTH', N'Bùi Anh Tuấn', 'E204', 3, 3, 120),
+(2, 2020, 'HK2', 'LTUDJAVA', N'Nguyễn Văn Khiết', 'E204', 4, 3, 100);
+
+insert into DangKy(mathongtin, mssv) values
+(1, 19120484),
+(2, 19120484),
+(1, 19120477),
+(2, 19120477),
+(1, 19120495),
+(2, 19120495),
+(1, 19120120),
+(2, 19120707),
+(2, 19120729);
+
 update LopHoc
 set siso = (select count(mssv) from SinhVien where lop = '19CTT1' group by lop)
 where malop = '19CTT1';

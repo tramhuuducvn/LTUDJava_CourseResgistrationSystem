@@ -15,4 +15,9 @@ dụ mẫu
 --> hoàn thành các lớp POJO
 
 5.png: 23h11 ngày 24/05/2021
---> chỉnh sửa lại database, mô hình ER, chỉnh sửa các lại các lớp POJO
+--> chỉnh sửa lại database, mô hình ER, chỉnh sửa các lại các lớp POJO,
+nhưng mapping chưa thành công
+
+6.png: 22h32 ngày 25/05/2021
+--> thiết kế lại database, mô hình ER, chỉnh sửa lại các lớp POJO, 
+chạy thử nghiệm một số thao tác đơn giản --> thành công
