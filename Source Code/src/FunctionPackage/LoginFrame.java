@@ -7,17 +7,26 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import javax.swing.plaf.*;
+import org.hibernate.query.Query;
 
-public class LoginFrame extends JFrame{
+import Example.Student;
+
+import org.hibernate.*;
+
+public class LoginFrame extends JFrame{	
 	private String host;
 	private String port;
 	private String database;
 	private String user;
-	private String password;	
+	private String password;
+	
+	private String taikhoan;
+	private String matkhau;
 	
 	private JButton login;
 	
 	public LoginFrame(){
+		setTitle("Login to Course Registration System");
 		initFrame();		
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -70,7 +79,7 @@ public class LoginFrame extends JFrame{
 		JPanel floor3 = new JPanel();
 		floor3.setLayout(new BoxLayout(floor3, BoxLayout.X_AXIS));
 		JLabel userLabel = new JLabel(" User database :         ");
-		JTextField userTextField = new JTextField();
+		JTextField userTextField = new JTextField("tramhuuduc");
 		floor3.add(userLabel);
 		floor3.add(userTextField);
 		floor3.setMaximumSize(new Dimension(2000, 37));
@@ -79,7 +88,7 @@ public class LoginFrame extends JFrame{
 		JPanel floor4 = new JPanel();
 		floor4.setLayout(new BoxLayout(floor4, BoxLayout.X_AXIS));
 		JLabel passLabel = new JLabel(" Password database : ");
-		JPasswordField passTextField = new JPasswordField();
+		JPasswordField passTextField = new JPasswordField("19120484@Ubuntu");
 		floor4.setMaximumSize(new Dimension(2000, 37));
 		floor4.add(passLabel);
 		floor4.add(passTextField);
@@ -94,7 +103,7 @@ public class LoginFrame extends JFrame{
 		JPanel floor5 = new JPanel();
 		floor5.setLayout(new BoxLayout(floor5, BoxLayout.X_AXIS));
 		JLabel taikhoanLabel = new JLabel(" User :         ");
-		JTextField taikhoanTextField = new JTextField();
+		JTextField taikhoanTextField = new JTextField("SV19120484");
 		floor5.add(taikhoanLabel);
 		floor5.add(taikhoanTextField);
 		floor5.setMaximumSize(new Dimension(2000, 37));
@@ -103,7 +112,7 @@ public class LoginFrame extends JFrame{
 		JPanel floor6 = new JPanel();
 		floor6.setLayout(new BoxLayout(floor6, BoxLayout.X_AXIS));
 		JLabel matkhauLabel = new JLabel(" Password : ");
-		JPasswordField matkhauTextField = new JPasswordField();
+		JPasswordField matkhauTextField = new JPasswordField("19120484");
 		floor6.setMaximumSize(new Dimension(2000, 37));
 		floor6.add(matkhauLabel);
 		floor6.add(matkhauTextField);
@@ -117,6 +126,48 @@ public class LoginFrame extends JFrame{
 		login.setForeground(c);
 		login.setBackground(c);
 		login.setOpaque(true);
+		login.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					try {
+						host = hostTextField.getText();
+						port = portTextField.getText();
+						database = dataTextField.getText();
+						user = userTextField.getText();
+						password = String.valueOf(passTextField.getPassword());
+						taikhoan = taikhoanTextField.getText();
+						matkhau  = String.valueOf(matkhauTextField.getPassword());
+						
+						HibernateUtil hbn = new HibernateUtil(host, port, database, user, password);
+						Session session = hbn.getFACTORY().openSession();
+						
+						Query query = session.createQuery("FROM GiaoVu as gv WHERE gv.taikhoan =: " + taikhoan);
+						query.setParameter(taikhoan, taikhoan);
+						if(query.list().isEmpty() == false) {
+							GiaoVu gv = (GiaoVu) query.list().get(0);
+							if(gv.getMatkhau().equals(matkhau)) {
+								System.out.println(gv.toString());
+							}
+						}
+						
+						query = session.createQuery("FROM SinhVien as sv WHERE sv.taikhoan =: " + taikhoan);
+						query.setParameter(taikhoan, taikhoan);
+						if(query.list().isEmpty() == false) {
+							SinhVien sv = (SinhVien) query.list().get(0);
+							if(sv.getMatkhau().equals(matkhau)) {
+								System.out.println(sv.toString());
+							}
+						}
+																		
+					}
+					catch(HibernateException e1) {
+						System.out.println(e1.getMessage());
+					}
+				}
+			}
+		});
+		
 		floor7.add(Box.createHorizontalGlue());
 		floor7.add(login);
 		floor7.add(Box.createRigidArea(new Dimension(15,0)));
@@ -147,7 +198,7 @@ public class LoginFrame extends JFrame{
             }            
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
+        } catch (java.lang.InstantiationException ex) {
             java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);

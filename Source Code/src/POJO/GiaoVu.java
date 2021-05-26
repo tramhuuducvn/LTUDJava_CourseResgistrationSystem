@@ -49,6 +49,10 @@ public class GiaoVu implements Serializable {
 		this.matkhau = matkhau;
 	}
 	
+	public String toString() {
+		return magv + "_" + hoten;
+	}
+	
 	//--------------------------------------------------------
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
