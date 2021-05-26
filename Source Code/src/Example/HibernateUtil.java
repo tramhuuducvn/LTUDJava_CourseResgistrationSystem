@@ -15,7 +15,6 @@ public class HibernateUtil {
         Properties pros = new Properties();
         pros.put(Environment.DIALECT, "org.hibernate.dialect.MySQLDialect");
         pros.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-//        pros.put(Environment.URL, "jdbc:mysql://localhost:3306/test");
         pros.put(Environment.URL, "jdbc:mysql://localhost:3306/CourseRegistrationSystem");
         pros.put(Environment.USER, "tramhuuduc");
         pros.put(Environment.PASS, "19120484@Ubuntu");

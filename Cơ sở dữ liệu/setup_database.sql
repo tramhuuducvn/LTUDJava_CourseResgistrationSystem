@@ -1,19 +1,20 @@
 create database CourseRegistrationSystem;
 
 -- drop table DangKy;
+-- drop table LichHoc;
 -- drop table SinhVien;
 -- drop table LopHoc;
 -- drop table GiaoVu;
 -- drop table HocKy;
 -- drop table MonHoc;
--- drop table LichHoc;
+
 
 -- mỗi giáo vụ có một magv để phân biệt với các giáo vụ khác và taikhoan là duy nhất
 create table GiaoVu (
   magv char(12) primary key, 
   hoten nvarchar(50),
-  taikhoan char(50),
-  matkhau char(50),
+  taikhoan char(50), -- cú pháp = GV + [magv], ví dụ: GV19120484
+  matkhau char(50), -- mật khẩu mặc định là magv
   unique(taikhoan)
 );
 
@@ -23,8 +24,8 @@ create table SinhVien (
   mssv char(12) primary key,
   hoten nvarchar(50),
   gioitinh nvarchar(3) check (gioitinh in (N'Nam',N'Nữ')),
-  taikhoan char(50),
-  matkhau char(50),
+  taikhoan char(50),-- cú pháp = SV + [mssv], ví dụ: SV19120484
+  matkhau char(50),--  mật khẩu mặc định là mssv
   lop char(7),
   email char(50),
   unique(taikhoan)
@@ -59,7 +60,7 @@ create table DangKy(
   mssv char(12),
   primary key(mathongtin, mssv)
 );
--- cứ mỗi thông tin đăng ký sẽ có một mã thông tin để phân biệt
+-- cứ mỗi thông tin lịch học sẽ có một mã thông tin để phân biệt
 -- mục đich là giảm số thuộc tính của khóa chính
 create table LichHoc (
 	mathongtin int primary key,
@@ -84,9 +85,9 @@ alter table LichHoc add constraint FK_LH_MH foreign key(mamonhoc) references Mon
 -- thông tin được lấy ngẫu nhiên từ file excel của các bảng điểm môn học em đã học được thầy cô chia sẻ cho lớp
 
 insert into GiaoVu(magv, hoten, taikhoan, matkhau) values
-('100', N'Nguyễn Văn Khiết', 'nguyenvankhiet', 'nguyenvankhiet'),
-('101', N'Mai Anh Tuấn', 'maianhtuan', 'maianhtuan'),
-('102', N'Hồ Tuấn Thanh', 'hoanhtuan', 'hoanhtuan');
+('100', N'Nguyễn Văn Khiết', 'GV100', '100'),
+('101', N'Mai Anh Tuấn', 'GV101', '101'),
+('102', N'Hồ Tuấn Thanh', 'GV102', '102');
 
 insert into LopHoc(malop, siso, sisonam, sisonu) values
 ('19CTT1', 0, 0, 0),
@@ -95,18 +96,18 @@ insert into LopHoc(malop, siso, sisonam, sisonu) values
 ('19CTT4', 0, 0, 0);
 
 insert into SinhVien(mssv, hoten, gioitinh, taikhoan, matkhau, lop, email) values
-('19120120', N'Phạm Hữu Phước', N'Nam', '19120120', '19120120', '19CTT1', '19120120@student.hcmus.edu.vn'),
-('19120142', N'Nguyễn Thị Phương Trang', N'Nữ', '19120142', '19120142', '19CTT1', '19120142@student.hcmus.edu.vn'),
-('19120147', N'Lê Anh Tuấn', N'Nam', '19120147', '19120147', '19CTT1', '19120147@student.hcmus.edu.vn'),
-('19120153', N'Lê Đoàn Phương Uyên', N'Nữ', '19120153', '19120153', '19CTT2', '19120153@student.hcmus.edu.vn'),
-('19120151', N'Nguyễn Trí Tuệ', N'Nam', '19120151', '19120151', '19CTT2', '19120151@student.hcmus.edu.vn'),
-('19120160', N'Đàm Thị Xuân Ý', N'Nữ', '19120160', '19120160', '19CTT2', '19120160@student.hcmus.edu.vn'),
-('19120477', N'Lê Văn Định', N'Nam', '19120477', '19120477', '19CTT3', '19120477@student.hcmus.edu.vn'),
-('19120484', N'Trầm Hữu Đức', N'Nam', '19120484', '19120484', '19CTT3', '19120484@student.hcmus.edu.vn'),
-('19120495', N'Nguyễn Nhật Duy', N'Nam', '19120495', '19120495', '19CTT3', '19120495@student.hcmus.edu.vn'),
-('19120707', N'Đào Xuân Tung', N'Nam', '19120707', '19120707', '19CTT4', '19120707@student.hcmus.edu.vn'),
-('19120729', N'Bùi Ngọc Thảo Vy', N'Nữ', '19120729', '19120729', '19CTT4', '19120729@student.hcmus.edu.vn'),
-('19120617', N'Mạch Vi Phong', N'Nam', '19120617', '19120617', '19CTT4', '19120617@student.hcmus.edu.vn');
+('19120120', N'Phạm Hữu Phước', N'Nam', 'SV19120120', '19120120', '19CTT1', '19120120@student.hcmus.edu.vn'),
+('19120142', N'Nguyễn Thị Phương Trang', N'Nữ', 'SV19120142', '19120142', '19CTT1', '19120142@student.hcmus.edu.vn'),
+('19120147', N'Lê Anh Tuấn', N'Nam', 'SV19120147', '19120147', '19CTT1', '19120147@student.hcmus.edu.vn'),
+('19120153', N'Lê Đoàn Phương Uyên', N'Nữ', 'SV19120153', '19120153', '19CTT2', '19120153@student.hcmus.edu.vn'),
+('19120151', N'Nguyễn Trí Tuệ', N'Nam', 'SV19120151', '19120151', '19CTT2', '19120151@student.hcmus.edu.vn'),
+('19120160', N'Đàm Thị Xuân Ý', N'Nữ', 'SV19120160', '19120160', '19CTT2', '19120160@student.hcmus.edu.vn'),
+('19120477', N'Lê Văn Định', N'Nam', 'SV19120477', '19120477', '19CTT3', '19120477@student.hcmus.edu.vn'),
+('19120484', N'Trầm Hữu Đức', N'Nam', 'SV19120484', '19120484', '19CTT3', '19120484@student.hcmus.edu.vn'),
+('19120495', N'Nguyễn Nhật Duy', N'Nam', 'SV19120495', '19120495', '19CTT3', '19120495@student.hcmus.edu.vn'),
+('19120707', N'Đào Xuân Tung', N'Nam', 'SV19120707', '19120707', '19CTT4', '19120707@student.hcmus.edu.vn'),
+('19120729', N'Bùi Ngọc Thảo Vy', N'Nữ', 'SV19120729', '19120729', '19CTT4', '19120729@student.hcmus.edu.vn'),
+('19120617', N'Mạch Vi Phong', N'Nam', 'SV19120617', '19120617', '19CTT4', '19120617@student.hcmus.edu.vn');
 
 insert into HocKy(namhoc, mahocky, ngaybatdau, ngayketthuc) values
 (2020, 'HK1', '2020-01-01', '2020-05-31'),
