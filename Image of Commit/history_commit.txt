@@ -25,3 +25,6 @@ chạy thử nghiệm một số thao tác đơn giản --> thành công
 7.png: 23h15 ngày 25/05/2021
 --> Lên ý tưởng giao diện, tạo gói MainPackage là nơi chứa các lớp điều khiển
 chính, và show giao diện
+
+8.png: 17h37 ngày 26/05/2021
+--> setup bố cục giao diện login
