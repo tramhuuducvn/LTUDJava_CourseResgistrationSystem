@@ -106,7 +106,7 @@ public class LoginFrame extends JFrame{
 		JPanel floor5 = new JPanel();
 		floor5.setLayout(new BoxLayout(floor5, BoxLayout.X_AXIS));
 		JLabel taikhoanLabel = new JLabel(" User :         ");
-		JTextField taikhoanTextField = new JTextField("SV19120484");
+		JTextField taikhoanTextField = new JTextField("GV102");
 		floor5.add(taikhoanLabel);
 		floor5.add(taikhoanTextField);
 		floor5.setMaximumSize(new Dimension(2000, 37));
@@ -115,7 +115,7 @@ public class LoginFrame extends JFrame{
 		JPanel floor6 = new JPanel();
 		floor6.setLayout(new BoxLayout(floor6, BoxLayout.X_AXIS));
 		JLabel matkhauLabel = new JLabel(" Password : ");
-		JPasswordField matkhauTextField = new JPasswordField("19120484");
+		JPasswordField matkhauTextField = new JPasswordField("102");
 		floor6.setMaximumSize(new Dimension(2000, 37));
 		floor6.add(matkhauLabel);
 		floor6.add(matkhauTextField);
@@ -130,7 +130,7 @@ public class LoginFrame extends JFrame{
 		login = new JButton("Login");
 		login.setPreferredSize(new Dimension(100, 100));
 		login.setForeground(c);
-		login.setBackground(c);
+//		login.setBackground(c);
 		Icon login_icon = setSizeImage("./img/login_icon.png", 20, 20);
 		login.setIcon(login_icon);
 		login.setOpaque(true);

@@ -1,4 +1,6 @@
-package FunctionPackage;
+package MainPackage;
+
+import FunctionPackage.*;
 
 import java.awt.EventQueue;
 import java.awt.Font;
@@ -40,8 +42,9 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				LoginFrame mf = new LoginFrame();
+				LoginFrame main = new LoginFrame();
 			}
 		});		
 	}
 }
+
