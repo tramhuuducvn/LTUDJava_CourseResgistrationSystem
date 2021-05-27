@@ -28,8 +28,12 @@ public class LichHoc implements Serializable{
 	@Column(name = "slots")
 	private int slots;
 	
-	@ManyToMany(mappedBy = "DanhSachLichHoc")
+	@ManyToMany(targetEntity = SinhVien.class, mappedBy = "DanhSachLichHoc")
 	private Set<SinhVien> DanhSachSinhVien;
+	
+	@ManyToMany(targetEntity = DotDangKyHocPhan.class,mappedBy = "DanhSachHocPhan")
+	private Set<DotDangKyHocPhan> DanhSachDDKHP;
+	
 	//-------------------------------------------------------------
 	public int getMathongtin() {
 		return mathongtin;

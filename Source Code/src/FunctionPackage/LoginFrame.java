@@ -8,9 +8,6 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.plaf.*;
 import org.hibernate.query.Query;
-
-import Example.Student;
-
 import org.hibernate.*;
 
 public class LoginFrame extends JFrame{	
@@ -28,10 +25,16 @@ public class LoginFrame extends JFrame{
 	public LoginFrame(){
 		setTitle("Login to Course Registration System");
 		initFrame();		
+		setSize(640, 480);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		setSize(640, 480);
 		setVisible(true);
+	}
+	
+	private ImageIcon setSizeImage(String srcFile, int x, int y) {	
+		ImageIcon src = new ImageIcon(srcFile);
+		Image scaled = src.getImage().getScaledInstance(x, y, Image.SCALE_SMOOTH);
+		return new ImageIcon(scaled);
 	}
 	
 	public void initFrame() {
@@ -40,7 +43,7 @@ public class LoginFrame extends JFrame{
 		floor.add(Box.createRigidArea(new Dimension(0,10)));
 		
 		Color c = new Color(227, 140, 0);
-		JLabel title1 = new JLabel("------- Connection Configuring -------");
+		JLabel title1 = new JLabel("------- Connection Configuring -------  ");
 		title1.setForeground(c);
 		floor.add(title1);
 		floor.add(Box.createRigidArea(new Dimension(0,15)));
@@ -95,7 +98,7 @@ public class LoginFrame extends JFrame{
 		floor.add(floor4);
 		floor.add(Box.createRigidArea(new Dimension(0,15)));
 		
-		JLabel title2 = new JLabel("------- Login Course Registration System -------");
+		JLabel title2 = new JLabel("------- Login Course Registration System -------         ");
 		title2.setForeground(c);
 		floor.add(title2);
 		floor.add(Box.createRigidArea(new Dimension(0,15)));
@@ -121,10 +124,15 @@ public class LoginFrame extends JFrame{
 		
 		JPanel floor7 = new JPanel();
 		floor7.setLayout(new BoxLayout(floor7, BoxLayout.X_AXIS));
+		JLabel status = new JLabel();
+		status.setVisible(false);
+		floor7.add(status);
 		login = new JButton("Login");
 		login.setPreferredSize(new Dimension(100, 100));
 		login.setForeground(c);
 		login.setBackground(c);
+		Icon login_icon = setSizeImage("./img/login_icon.png", 20, 20);
+		login.setIcon(login_icon);
 		login.setOpaque(true);
 		login.addMouseListener(new MouseAdapter() {
 			@Override
@@ -142,28 +150,59 @@ public class LoginFrame extends JFrame{
 						HibernateUtil hbn = new HibernateUtil(host, port, database, user, password);
 						Session session = hbn.getFACTORY().openSession();
 						
+						boolean k = false;
+						//------------------------------------------------------------
 						Query query = session.createQuery("FROM GiaoVu as gv WHERE gv.taikhoan =: " + taikhoan);
 						query.setParameter(taikhoan, taikhoan);
 						if(query.list().isEmpty() == false) {
+							k = true;
 							GiaoVu gv = (GiaoVu) query.list().get(0);
 							if(gv.getMatkhau().equals(matkhau)) {
+								status.setText(" --- Login Success ---");
+								status.setForeground(new Color(9, 117, 10));
+								status.setVisible(true);
+								
 								System.out.println(gv.toString());
+								GiaoVuFrame gvm = new GiaoVuFrame(gv);
+								dispose();
+							}
+							else {
+								status.setText(" --- Wrong Password ---");
+								status.setForeground(new Color(215, 50, 50));
+								status.setVisible(true);
 							}
 						}
-						
+						//------------------------------------------------------------
 						query = session.createQuery("FROM SinhVien as sv WHERE sv.taikhoan =: " + taikhoan);
 						query.setParameter(taikhoan, taikhoan);
 						if(query.list().isEmpty() == false) {
+							k = true;
 							SinhVien sv = (SinhVien) query.list().get(0);
 							if(sv.getMatkhau().equals(matkhau)) {
-								System.out.println(sv.toString());
+								status.setText(" --- Login Success ---");
+								status.setForeground(new Color(9, 117, 10));
+								status.setVisible(true);
+								
+								System.out.println(sv.toString());								
+								SinhVienFrame svm = new SinhVienFrame(sv);
+								dispose();
+							}
+							else {
+								status.setText(" --- Wrong Password ---");
+								status.setForeground(new Color(215, 50, 50));
+								status.setVisible(true);
 							}
 						}
-																		
+						//-----------------------------------------------------------------------------------
+						if(k == false) {
+							status.setText(" --- This account doesn't exist, or wrong ---");
+							status.setForeground(new Color(215, 50, 50));
+							status.setVisible(true);
+						}																		
 					}
 					catch(HibernateException e1) {
 						System.out.println(e1.getMessage());
-					}
+					} 
 				}
 			}
 		});
@@ -211,7 +250,6 @@ public class LoginFrame extends JFrame{
 			public void run() {
 				LoginFrame mf = new LoginFrame();
 			}
-		});
-		
+		});		
 	}
 }

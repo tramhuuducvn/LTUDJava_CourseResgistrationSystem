@@ -16,7 +16,14 @@ public class GiaoVu implements Serializable {
 	private String taikhoan;
 	@Column (name = "matkhau", length = 50)
 	private String matkhau;
-	//Method -------------------------------------------------------	
+	//Method -------------------------------------------------------
+	public GiaoVu() {
+		this.magv = "102";
+		this.hoten = "Hồ Tuấn Thanh";
+		this.taikhoan = "GV102";
+		this.matkhau = "102";
+	}
+	
 	public String getMagv() {
 		return magv;
 	}

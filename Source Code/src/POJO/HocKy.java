@@ -2,7 +2,6 @@ package POJO;
 
 import java.io.*;
 import java.util.*;
-
 import javax.persistence.*;
 
 @Entity
@@ -20,9 +19,14 @@ public class HocKy implements Serializable{
 	private Date ngaybatdau;
 	@Column(name = "ngayketthuc")
 	private Date ngayketthuc;
+	@Column(name = "trangthai")
+	private boolean trangthai;
 	
-	@OneToMany(mappedBy = "hocky")
+	@OneToMany(targetEntity = LichHoc.class, mappedBy = "hocky")
 	private Set<LichHoc> ThongTinLichHoc;
+	
+	@OneToMany(targetEntity = DotDangKyHocPhan.class, mappedBy = "hocky")
+	private Set<DotDangKyHocPhan> DanhSachDDKHP;
 	
 	public int getNamhoc() {
 		return namhoc;

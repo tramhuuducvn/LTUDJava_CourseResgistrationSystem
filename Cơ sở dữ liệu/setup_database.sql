@@ -1,12 +1,15 @@
-create database CourseRegistrationSystem;
 
--- drop table DangKy;
--- drop table LichHoc;
--- drop table SinhVien;
--- drop table LopHoc;
--- drop table GiaoVu;
--- drop table HocKy;
--- drop table MonHoc;
+ create database CourseRegistrationSystem;
+
+# drop table DangKy;
+# drop table ChiTiet;
+# drop table DotDangKyHocPhan;
+# drop table LichHoc;
+# drop table SinhVien;
+# drop table LopHoc;
+# drop table GiaoVu;
+# drop table HocKy;
+# drop table MonHoc;
 
 
 -- mỗi giáo vụ có một magv để phân biệt với các giáo vụ khác và taikhoan là duy nhất
@@ -37,6 +40,7 @@ create table HocKy (
   mahocky char(3),
   ngaybatdau date,
   ngayketthuc date,
+  trangthai bit, -- nếu là 1 thì đó là học kỳ hiện tại, chỉ có duy nhất một bộ có thuộc tính này = 1, còn lại đều bằng 0
   primary key(namhoc, mahocky)
 );
 
@@ -56,14 +60,14 @@ create table MonHoc (
 );
 
 create table DangKy(
-	mathongtin int,
+  mathongtin int,
   mssv char(12),
   primary key(mathongtin, mssv)
 );
 -- cứ mỗi thông tin lịch học sẽ có một mã thông tin để phân biệt
 -- mục đich là giảm số thuộc tính của khóa chính
 create table LichHoc (
-	mathongtin int primary key,
+  mathongtin int primary key,
   namhoc int,
   hocky char(3),
   mamonhoc char(10),
@@ -74,12 +78,29 @@ create table LichHoc (
   slots int
 );
 
+create table DotDangKyHocPhan(
+  madot int primary key,
+  namhoc int,
+  hocky char(3),
+  STT int,
+  ngaybatdaudangky date,
+  ngayketthucdangky date
+);
+
+create table ChiTiet(
+  mathongtin int,
+  madot int,
+  primary key(mathongtin, madot)
+);
+
 alter table SinhVien add constraint FK_SV_LOP foreign key(lop) references LopHoc(malop);
 alter table DangKy add constraint FK_DK_SV foreign key(mssv) references SinhVien(mssv);
 alter table DangKy add constraint FK_DK_LH foreign key(mathongtin) references LichHoc(mathongtin);
 alter table LichHoc add constraint FK_LH_HK foreign key(namhoc, hocky) references HocKy(namhoc, mahocky);
 alter table LichHoc add constraint FK_LH_MH foreign key(mamonhoc) references MonHoc(mamonhoc);
-
+alter table DotDangKyHocPhan add constraint FK_DDKHP_HK foreign key(namhoc, hocky) references HocKy(namhoc, mahocky);
+alter table ChiTiet add constraint FK_CT_DDKHP foreign key(madot) references DotDangKyHocPhan(madot);
+alter table ChiTiet add constraint FK_CT_LichHoc foreign key(mathongtin) references LichHoc(mathongtin);
 
 -- lưu ý các thông tin sau chỉ mang mục đích học thuật, tham khảo và thí dụ
 -- thông tin được lấy ngẫu nhiên từ file excel của các bảng điểm môn học em đã học được thầy cô chia sẻ cho lớp
@@ -109,9 +130,10 @@ insert into SinhVien(mssv, hoten, gioitinh, taikhoan, matkhau, lop, email) value
 ('19120729', N'Bùi Ngọc Thảo Vy', N'Nữ', 'SV19120729', '19120729', '19CTT4', '19120729@student.hcmus.edu.vn'),
 ('19120617', N'Mạch Vi Phong', N'Nam', 'SV19120617', '19120617', '19CTT4', '19120617@student.hcmus.edu.vn');
 
-insert into HocKy(namhoc, mahocky, ngaybatdau, ngayketthuc) values
-(2020, 'HK1', '2020-01-01', '2020-05-31'),
-(2020, 'HK2', '2020-07-01', '2020-11-30');
+insert into HocKy(namhoc, mahocky, ngaybatdau, ngayketthuc, trangthai) values
+(2020, 'HK1', '2020-01-01', '2020-05-31', 0),
+(2020, 'HK2', '2020-07-01', '2020-11-30', 1),
+(2021, 'HK1', '2021-01-01', '2021-05-31', 0);
 
 insert into MonHoc(mamonhoc, tenmonhoc, sotinchi) values
 ('THTH', N'Toán học tổ hợp', 4),
@@ -193,3 +215,10 @@ where sisonam is null;
 update LopHoc
 set sisonu = 0
 where sisonu is null;
+
+
+
+
+
+
+

@@ -1,0 +1,62 @@
+--> Tổng 110 điểm tương đương mô tả của đồ án
+--> Các chức năng được phân tích và gộp lại theo nhóm để phù hợp với 
+    các nhóm giao diện chức năng
+
++ Mô tả lại các chức năng của giáo vụ: (tương đương chức năng 1)
+	- Tài khoản: (2.5 điểm)
+		- xem thông tin cá nhân, 
+		- chỉnh sửa thông tin cá nhân,
+		- thay đổi mật khẩu.
+
+	- Quản lý giáo vụ: (5 điểm) (tương đương chức năng 2)
+		- xem danh sách giáo vụ, 
+		- tìm kiếm tài khoản, 
+		- thêm, 
+		- xóa, 
+		- cập nhật thông tin một giáo vụ ra khỏi hệ thống.
+		--- quy ước: giáo vụ sẽ không được sử dụng chức năng này đối với 
+		   tài khoản của chính mình
+
+	- Quản lý môn học: (5 điểm) (tương đương chức năng 3)
+		- xem danh sách, 
+		- tìm kiếm, 
+		- thêm, 
+		- cập nhật, 
+		- xóa một môn học
+
+	- Quản lý học kỳ: (5 điểm) (tương đương chức năng 4)
+		- xem danh sách, 
+		- thêm học kỳ mới, 
+		- đặt 1 học kỳ làm học kỳ hiện tại,
+
+	- Quản lý lớp học: (20 điểm) (tương đương chức năng 5, 6)
+		xem danh sách,
+		thêm, xóa một lớp học
+		xem danh sách sinh viên trong một lớp học
+		tìm kiếm sinh viên trong một lớp học
+		xem các môn học mà sinh viên đăng ký
+		thêm một sinh viên mới vào lớp học
+		cập nhật thông tin cho sinh viên
+		đặt lại mật khẩu cho sinh viên(reset)
+	
+	- Quản lý đăng ký học phần: (40 điểm) (tương đương chức năng 7, 8, 9)
+		- xem danh sách các đợt(kỳ) đăng ký học phần
+		* tạo một đợt(kỳ) đăng ký học phần mới cho học kỳ hiện tại
+		- xem danh sách, tìm các học kỳ mở trong học kỳ hiện tại
+		* Thêm, xóa một học phần
+		- Xem danh sách, tìm kiếm sinh viên đăng ký trong một học phần
+
++Mô tả lại các chức năng của Sinh Viên: 
+	- Tài khoản: (2.5 điểm) (tương đương chức năng 1)
+		- xem thông tin cá nhân, 
+		- chỉnh sửa thông tin cá nhân,
+		- thay đổi mật khẩu.
+
+	- Đăng ký học phần: (15 điểm) (tương đương chức năng 10)
+		- Mỗi sinh viên đăng ký tối đa 8 môn
+		- Sinh viên không được đăng ký 2 môn trùng giờ(thứ mấy, ca mấy)
+
+	- Xem danh sách học phần đã đăng ký: (15 điểm) (tương đương chức năng 11, 12)
+		- Xóa một học phần đã đăng ký nếu còn hạn
+
+<19120484 - Trầm Hữu Đức>
