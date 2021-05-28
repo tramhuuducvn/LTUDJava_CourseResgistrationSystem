@@ -3,7 +3,8 @@
     các nhóm giao diện chức năng
 
 + Mô tả lại các chức năng của giáo vụ: (tương đương chức năng 1)
-	- Tài khoản: (2.5 điểm)
+	- log out
+	- Thông tin tài khoản: (2.5 điểm)
 		- xem thông tin cá nhân, 
 		- chỉnh sửa thông tin cá nhân,
 		- thay đổi mật khẩu.

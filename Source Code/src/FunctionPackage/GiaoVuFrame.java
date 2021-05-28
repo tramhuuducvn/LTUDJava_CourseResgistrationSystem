@@ -11,10 +11,11 @@ import org.hibernate.query.Query;
 import org.hibernate.*;
 
 public class GiaoVuFrame extends JFrame{	
-	private GiaoVu gv;
+	private GiaoVu gv;	
+	private JButton home; 
 	
 	private JButton dangxuat;
-	private JButton quanlytaikhoan;
+	private JButton thongtintaikhoan;
 	private JButton quanlygiaovu;
 	private JButton quanlymonhoc;
 	private JButton quanlyhocky;
@@ -25,15 +26,32 @@ public class GiaoVuFrame extends JFrame{
 	private JPanel westPanel;
 	private JPanel centerPanel;
 	
+	final Color mainColor = new Color(249, 108, 9);
+	final Color borderColor = new Color(200, 126, 74);
+	
+//	private BorderLayout mainLayout;
+	
 	public GiaoVuFrame(GiaoVu temp) {
 		this.gv = temp;
-		setLayout(new BorderLayout());
+		home = new JButton("Home");
+		home.setForeground(mainColor);
+		home.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			homeClicked();
+	    		}
+	    	}
+	    });
+		
+//		mainLayout = new BorderLayout();
+		setLayout(new BorderLayout(10, 10));
 		northPanel = new JPanel();
 		westPanel = new JPanel();
 		centerPanel = new JPanel();
-		add(northPanel, BorderLayout.NORTH);
-		add(westPanel, BorderLayout.WEST);
-		add(centerPanel, BorderLayout.CENTER);
+		add(northPanel, BorderLayout.NORTH); northPanel.setVisible(true);
+		add(westPanel, BorderLayout.WEST); westPanel.setVisible(false);
+		add(centerPanel, BorderLayout.CENTER); homeClicked();		
 		
 		initUI();
 		
@@ -49,10 +67,10 @@ public class GiaoVuFrame extends JFrame{
 		Image scaled = src.getImage().getScaledInstance(x, y, Image.SCALE_SMOOTH);
 		return new ImageIcon(scaled);
 	}
+	
 	private void initUI() {
 		northPanel.setLayout(new GridLayout(1,7));
 		northPanel.setPreferredSize(new Dimension(0, 100));
-		Color northColor = new Color(249, 108, 9);
 		
 		dangxuat = new JButton("<html><center> Đăng Xuất<br /> . </center></html>");
 		dangxuat.setIcon(NewIcon("img/logout_icon.png", 37, 37));
@@ -68,10 +86,18 @@ public class GiaoVuFrame extends JFrame{
 	    	}
 	    });
 	    
-		quanlytaikhoan = new JButton("<html><center> Quản lý tài khoản<br /> . </center></html>");
-		quanlytaikhoan.setVerticalTextPosition(SwingConstants.BOTTOM);
-		quanlytaikhoan.setHorizontalTextPosition(SwingConstants.CENTER);
-		quanlytaikhoan.setIcon(NewIcon("img/taikhoan_icon.png", 37, 37));
+	    thongtintaikhoan = new JButton("<html><center> Thông tin tài khoản<br /> . </center></html>");
+	    thongtintaikhoan.setVerticalTextPosition(SwingConstants.BOTTOM);
+	    thongtintaikhoan.setHorizontalTextPosition(SwingConstants.CENTER);
+	    thongtintaikhoan.setIcon(NewIcon("img/taikhoan_icon.png", 37, 37));
+	    thongtintaikhoan.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			thongtintaikhoanClickAction();
+	    		}
+	    	}
+	    });
 		
 		quanlygiaovu = new JButton("<html><center> Quản lý giáo vụ<br /> . </center></html>");
 		quanlygiaovu.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -96,29 +122,62 @@ public class GiaoVuFrame extends JFrame{
 		quanlydangkyhocphan = new JButton("<html><center>Quản lý đăng ký <br /> học phần</center></html>");
 		quanlydangkyhocphan.setVerticalTextPosition(SwingConstants.BOTTOM);
 		quanlydangkyhocphan.setHorizontalTextPosition(SwingConstants.CENTER);
-		quanlydangkyhocphan.setIcon(NewIcon("img/dangkyhocphan_icon.png", 37, 37));
+		quanlydangkyhocphan.setIcon(NewIcon("img/quanlydangkyhocphan_icon.png", 37, 37));
 		
-		dangxuat.setForeground(northColor);
-		quanlytaikhoan.setForeground(northColor);
-		quanlygiaovu.setForeground(northColor);
-		quanlymonhoc.setForeground(northColor);
-		quanlyhocky.setForeground(northColor);
-		quanlylophoc.setForeground(northColor);
-		quanlydangkyhocphan.setForeground(northColor);		
+		dangxuat.setForeground(mainColor);
+		thongtintaikhoan.setForeground(mainColor);
+		quanlygiaovu.setForeground(mainColor);
+		quanlymonhoc.setForeground(mainColor);
+		quanlyhocky.setForeground(mainColor);
+		quanlylophoc.setForeground(mainColor);
+		quanlydangkyhocphan.setForeground(mainColor);		
 		
 		northPanel.add(dangxuat);
-		northPanel.add(quanlytaikhoan);
+		northPanel.add(thongtintaikhoan);
 		northPanel.add(quanlygiaovu);
 		northPanel.add(quanlymonhoc);
 		northPanel.add(quanlyhocky);
 		northPanel.add(quanlylophoc);
 		northPanel.add(quanlydangkyhocphan);		
 				
+	}	
+	
+	public void homeClicked() {
+		westPanel.removeAll();
+		westPanel.setVisible(false);
+		centerPanel.removeAll();
+		JLabel mainImg = new JLabel();
+		mainImg.setIcon(new ImageIcon("img/dynamic_img.gif"));
+		centerPanel.add(mainImg, BorderLayout.CENTER);
+		centerPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+		centerPanel.setVisible(false);
+		centerPanel.setVisible(true);
 	}
 	
-	public void dangxuatClickAction(){
-
+	public void thongtintaikhoanClickAction() {			
+			centerPanel.removeAll();
+			
+			westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+			westPanel.setPreferredSize(new Dimension(150, 0));
+			westPanel.add(Box.createVerticalGlue());
+			JPanel floor = new JPanel();
+			floor.setLayout(new GridLayout(3,1));
+			
+			floor.add(home);
+			JButton doimatkhau = new JButton("Đổi mật khẩu");
+			doimatkhau.setForeground(mainColor);
+			floor.add(doimatkhau);
+			
+			westPanel.add(floor);			
+			westPanel.add(Box.createVerticalGlue());			
+			westPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+			westPanel.setVisible(true);			
+			
+			centerPanel.setVisible(false);
+			centerPanel.setVisible(true);
+//			this.setEnabled(false);			
 	}
+	
 	public void quanlygiaovuClickAction(){
 
 	}

@@ -38,3 +38,6 @@ mật khẩu thành công
 
 11.png: 17h26 ngày 27/05/2021
 --> chỉnh sửa lại cơ sở dữ liệu mô hình ER cho phù hợp
+
+12.png: 22h45 ngày 27/05/2021
+--> setup bố cục giao diện cho các chức năng của Giáo Vụ
