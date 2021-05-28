@@ -59,6 +59,12 @@ public class GiaoVuFrame extends JFrame{
 		
 		initUI();
 		
+		addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent) {
+            	session.close();
+                dispose();
+            }
+        });
 		setTitle("Course Registration System - Teacher");
 		setSize(1370, 840);
 		setLocationRelativeTo(null);
@@ -190,24 +196,72 @@ public class GiaoVuFrame extends JFrame{
 		westPanel.removeAll();
 		westPanel.setVisible(false);
 		centerPanel.removeAll();
-		JLabel mainImg = new JLabel();
+		JButton mainImg = new JButton();
 		mainImg.setIcon(new ImageIcon("img/dynamic_img.gif"));
-		centerPanel.add(mainImg, BorderLayout.CENTER);
+		mainImg.setEnabled(false);
+		centerPanel.setLayout(new GridLayout(1,1));
+		centerPanel.add(mainImg);
 		centerPanel.setVisible(false);
 		centerPanel.setVisible(true);
 	}
-	
+	private int demCapNhat = 0;
 	public void thongtintaikhoanClickAction() {			
 			centerPanel.removeAll();
 			westPanel.removeAll();
+			//---------------------------------------------------
+			centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+			centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+			JLabel magvLb = new JLabel("Mã giáo vụ: " + gv.getMagv());
+			JPanel cfloor = new JPanel(); cfloor.setLayout(new BoxLayout(cfloor, BoxLayout.X_AXIS)); 
+			cfloor.add(magvLb);
+			centerPanel.add(cfloor);
+			centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 			
+			JPanel floor1 = new JPanel(); floor1.setLayout(new BoxLayout(floor1, BoxLayout.X_AXIS));
+			floor1.setMaximumSize(new Dimension(500, 37));
+			JLabel hotenLabel = new JLabel("Họ tên:    ");
+			JTextField hotenTextField = new JTextField(gv.getHoten());
+			floor1.add(hotenLabel);
+			floor1.add(hotenTextField);
+			centerPanel.add(floor1);
+			centerPanel.add(Box.createVerticalGlue());
+			
+			JLabel statusCapNhat = new JLabel("Cập nhật thành công!");
+			statusCapNhat.setVisible(false);
+			JPanel cnp = new JPanel(); cnp.setLayout(new BoxLayout(cnp, BoxLayout.X_AXIS)); 
+			cnp.add(Box.createHorizontalGlue());
+			cnp.add(statusCapNhat);
+			centerPanel.add(cnp);
+			//------------------------------------------------------
 			westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
 			westPanel.setPreferredSize(new Dimension(150, 0));
-			westPanel.add(Box.createVerticalGlue());
+			westPanel.add(Box.createVerticalGlue());		
 			JPanel floor = new JPanel();
 			floor.setLayout(new GridLayout(3,1));
-			
+			//-----------------------------------------------------
 			floor.add(home);
+			//----------------------------------------------------
+			
+			//-----------------------------------------------------
+			JButton capnhat = new JButton("Cập nhật");
+			capnhat.setForeground(mainColor);
+			floor.add(capnhat);
+			capnhat.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseReleased(MouseEvent e) {
+					session.getTransaction().begin();
+					gv.setHoten(hotenTextField.getText());
+					session.update("GiaoVu", gv);
+					session.getTransaction().commit();
+					statusCapNhat.setForeground(new Color(0, 255, 127));
+					if(demCapNhat%2 == 1) {
+						statusCapNhat.setForeground(new Color(255, 107, 107));
+					}
+					statusCapNhat.setVisible(true);
+					demCapNhat++;
+				}
+			});
+			//--------------------------------------------------------
 			JButton doimatkhau = new JButton("Đổi mật khẩu");
 			doimatkhau.setForeground(mainColor);
 			floor.add(doimatkhau);
@@ -223,20 +277,13 @@ public class GiaoVuFrame extends JFrame{
 		    		    		if(SwingUtilities.isLeftMouseButton(e)) {
 		    		    			if(dmk.getMatKhauCu().equals(gv.getMatkhau()) && dmk.getMatKhauMoi().equals(dmk.getMatKhauMoiNhapLai())) {
 		    		    				session.getTransaction().begin();
-		    		    				Query q = session.createQuery("UPDATE GiaoVu set matkhau =: matkhaumoi  WHERE magv =: magv");
-		    		    				q.setParameter("matkhaumoi", dmk.getMatKhauMoi());
-		    		    				q.setParameter("magv", gv.getMagv());
-		    		    				if(q.executeUpdate() == 1) {
-		    		    					gv.setMatkhau(dmk.getMatKhauMoi());
-		    		    				}		    		    				
+	    		    					gv.setMatkhau(dmk.getMatKhauMoi());
+	    		    					session.update("GiaoVu",gv);		
 		    		    				dmk.dispose();
 			    		    			setEnabled(true);
 			    		    			session.getTransaction().commit();
 		    		    			}
 		    		    			else {
-		    		    				System.out.println(dmk.getMatKhauCu());
-		    		    				System.out.println(dmk.getMatKhauMoi());
-		    		    				System.out.println(dmk.getMatKhauMoiNhapLai());
 		    		    				dmk.getStatus().setText("Mật khẩu cũ hoặc mới không khớp");
 		    		    				dmk.getStatus().setVisible(true);
 		    		    			}
@@ -256,15 +303,13 @@ public class GiaoVuFrame extends JFrame{
 		    		}
 		    	}
 		    });			
-			
-			
+			//--------------------------------------------------------			
 			westPanel.add(floor);			
 			westPanel.add(Box.createVerticalGlue());
 			westPanel.setVisible(false);
 			westPanel.setVisible(true);
 			centerPanel.setVisible(false);
-			centerPanel.setVisible(true);
-//			this.setEnabled(false);			
+			centerPanel.setVisible(true);			
 	}
 	
 	public void quanlygiaovuClickAction(){

@@ -6,7 +6,7 @@
 	- log out
 	- Thông tin tài khoản: (2.5 điểm)
 		- xem thông tin cá nhân, 
-		- chỉnh sửa thông tin cá nhân,
+		- cập nhật thông tin cá nhân,
 		- thay đổi mật khẩu.
 
 	- Quản lý giáo vụ: (5 điểm) (tương đương chức năng 2)
@@ -50,7 +50,7 @@
 +Mô tả lại các chức năng của Sinh Viên: 
 	- Tài khoản: (2.5 điểm) (tương đương chức năng 1)
 		- xem thông tin cá nhân, 
-		- chỉnh sửa thông tin cá nhân,
+		- cập nhật thông tin cá nhân,
 		- thay đổi mật khẩu.
 
 	- Đăng ký học phần: (15 điểm) (tương đương chức năng 10)

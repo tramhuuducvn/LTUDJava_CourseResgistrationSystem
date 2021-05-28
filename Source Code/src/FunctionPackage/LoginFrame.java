@@ -127,11 +127,26 @@ public class LoginFrame extends JFrame{
 		JLabel status = new JLabel();
 		status.setVisible(false);
 		floor7.add(status);
+		
+		floor7.add(Box.createHorizontalGlue());
+		JButton cancel = new JButton("Cancel"); cancel.setForeground(c);
+		floor7.add(cancel);
+		cancel.setIcon(setSizeImage("img/cancel_icon.png", 20, 20));
+		cancel.setPreferredSize(new Dimension(100, 100));
+		cancel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					System.exit(0);
+				}
+			}
+		});
+		
 		login = new JButton("Login");
 		login.setPreferredSize(new Dimension(100, 100));
 		login.setForeground(c);
 //		login.setBackground(c);
-		Icon login_icon = setSizeImage("./img/login_icon.png", 20, 20);
+		Icon login_icon = setSizeImage("img/login_icon.png", 20, 20);
 		login.setIcon(login_icon);
 		login.setOpaque(true);
 		login.addMouseListener(new MouseAdapter() {
@@ -185,7 +200,7 @@ public class LoginFrame extends JFrame{
 								status.setVisible(true);
 								
 								System.out.println(sv.toString());								
-								SinhVienFrame svm = new SinhVienFrame(sv);
+								SinhVienFrame svm = new SinhVienFrame(sv, session);
 //								session.close();
 								dispose();
 							}
@@ -210,7 +225,7 @@ public class LoginFrame extends JFrame{
 			}
 		});
 		
-		floor7.add(Box.createHorizontalGlue());
+		
 		floor7.add(login);
 		floor7.add(Box.createRigidArea(new Dimension(15,0)));
 		floor.add(floor7);

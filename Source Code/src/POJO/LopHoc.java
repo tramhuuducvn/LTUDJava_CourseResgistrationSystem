@@ -22,6 +22,11 @@ public class LopHoc implements Serializable{
 	@OneToMany(mappedBy = "lop")
 	private Set<SinhVien> DanhSachSinhVien;
 	// Method-------------------------------------------------
+	public LopHoc() {
+		this.malop = "19CTT3";
+	}
+	
+	
 	public String getMalop() {
 		return malop;
 	}
@@ -62,7 +67,13 @@ public class LopHoc implements Serializable{
 		DanhSachSinhVien = danhSachSinhVien;
 	}
 	
+	@Override
+	public String toString() {
+		return this.malop;
+	}
+	
 	public static void main(String[] args) {
-		System.out.println("Hello World");
+		LopHoc lop = new LopHoc();
+		System.out.println(lop.toString());
 	}
 }

@@ -12,6 +12,7 @@ import org.hibernate.*;
 
 public class SinhVienFrame extends JFrame{
 	private SinhVien sv;
+	private Session session;
 	
 	private JButton home;
 	private JButton dangxuat;
@@ -26,8 +27,9 @@ public class SinhVienFrame extends JFrame{
 	final Color mainColor = new Color(249, 108, 9);
 	final Color borderColor = new Color(200, 126, 74);
 	
-	public SinhVienFrame(SinhVien temp) {
+	public SinhVienFrame(SinhVien temp, Session sess) {
 		this.sv = temp;
+		this.session = sess;
 		home = new JButton("Home"); home.setForeground(mainColor);
 		home.addMouseListener(new MouseAdapter() {
 	    	@Override
@@ -51,6 +53,12 @@ public class SinhVienFrame extends JFrame{
 		
 		initUI();
 		
+		addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent) {
+            	session.close();
+                dispose();
+            }
+        });
 		setTitle("Course Registration System - Student");
 		setSize(1370, 840);
 		setLocationRelativeTo(null);
@@ -133,24 +141,111 @@ public class SinhVienFrame extends JFrame{
 		westPanel.removeAll();
 		westPanel.setVisible(false);
 		centerPanel.removeAll();
-		JLabel mainImg = new JLabel();
-		mainImg.setIcon(new ImageIcon("img/dynamic_img.gif"));
-		centerPanel.add(mainImg, BorderLayout.CENTER);
+		JButton mainImg = new JButton();
+		mainImg.setIcon(new ImageIcon("img/dynamic_img_2.gif"));
+		mainImg.setEnabled(false);
+		centerPanel.setLayout(new GridLayout(1,1));
+		centerPanel.add(mainImg);
 		centerPanel.setVisible(false);
 		centerPanel.setVisible(true);
 	}
 	
+	private int demCapNhat = 0;
 	public void thongtintaikhoanClickAction() {			
 		centerPanel.removeAll();
 		westPanel.removeAll();
+		//-------------------------------------------------------------
+		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+		centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+		JLabel magvLb = new JLabel("Mã số sinh viên: " + sv.getMssv());
+		JPanel cfloor = new JPanel(); cfloor.setLayout(new BoxLayout(cfloor, BoxLayout.X_AXIS)); 
+		cfloor.add(magvLb);
+		centerPanel.add(cfloor);
+		centerPanel.add(Box.createRigidArea(new Dimension(0, 5)));
 		
+		JLabel emailLb = new JLabel("Email: " + sv.getEmail());
+		JPanel afloor = new JPanel(); afloor.setLayout(new BoxLayout(afloor, BoxLayout.X_AXIS)); 
+		afloor.add(emailLb);
+		centerPanel.add(afloor);
+		centerPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+		
+		JPanel floor1 = new JPanel(); floor1.setLayout(new BoxLayout(floor1, BoxLayout.X_AXIS));
+		floor1.setMaximumSize(new Dimension(500, 37));
+		JLabel hotenLabel = new JLabel("Họ tên:    ");
+		JTextField hotenTextField = new JTextField(sv.getHoten());
+		floor1.add(hotenLabel);
+		floor1.add(hotenTextField);
+		centerPanel.add(floor1);
+		centerPanel.add(Box.createRigidArea(new Dimension(0, 3)));
+		
+		JPanel floor2 = new JPanel(); floor2.setLayout(new BoxLayout(floor2, BoxLayout.X_AXIS));
+		floor2.setMaximumSize(new Dimension(500, 37));
+		JLabel gioitinhLabel = new JLabel("Giới tính: ");
+		String[] gt = {"Nam", "Nữ"};
+		JComboBox gioitinhCmb = new JComboBox(gt);
+		floor2.add(gioitinhLabel); floor2.add(gioitinhCmb);
+		centerPanel.add(floor2);
+		centerPanel.add(Box.createRigidArea(new Dimension(0, 3)));
+		
+		JPanel floor3 = new JPanel(); floor3.setLayout(new BoxLayout(floor3, BoxLayout.X_AXIS));
+		floor3.setMaximumSize(new Dimension(500, 37));
+		JLabel lophocLabel = new JLabel("Lớp học:   ");
+		floor3.add(lophocLabel);
+		JComboBox lophoccb = new JComboBox();
+		try {
+			Query q1 = session.createQuery("FROM LopHoc");
+			java.util.List<LopHoc> lophocList = q1.list();
+			int k = 0;
+			for(LopHoc c : lophocList) {
+				if(c.getMalop().equals(sv.getLop().getMalop())) {
+					k = lophocList.indexOf(c);
+				}
+				lophoccb.addItem(c);
+			}
+			lophoccb.setSelectedIndex(k);
+		} catch (HibernateException e) {System.out.println(e.getMessage());}
+		floor3.add(lophoccb);
+		centerPanel.add(floor3);
+		
+		centerPanel.add(Box.createVerticalGlue());
+		JLabel statusCapNhat = new JLabel("Cập nhật thành công!");
+		statusCapNhat.setVisible(false);
+		JPanel cnp = new JPanel(); cnp.setLayout(new BoxLayout(cnp, BoxLayout.X_AXIS)); 
+		cnp.add(Box.createHorizontalGlue());
+		cnp.add(statusCapNhat);
+		centerPanel.add(cnp);
+		//---------------------------------------------------------------
 		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
 		westPanel.setPreferredSize(new Dimension(150, 0));
 		westPanel.add(Box.createVerticalGlue());
 		JPanel floor = new JPanel();
 		floor.setLayout(new GridLayout(3,1));
-		
+		//--------------------------------------------------------------------
 		floor.add(home);
+		//-----------------------------------------------------------------
+		JButton capnhat = new JButton("Cập nhật");
+		capnhat.setForeground(mainColor);
+		floor.add(capnhat);
+		capnhat.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				session.getTransaction().begin();
+				sv.setHoten(hotenTextField.getText());
+				sv.setGioitinh((String)gioitinhCmb.getSelectedItem());
+				sv.setLop((LopHoc)lophoccb.getSelectedItem());
+				
+				session.update("SinhVien", sv);
+				session.getTransaction().commit();
+				statusCapNhat.setVisible(true);
+				statusCapNhat.setForeground(new Color(0, 255, 127));
+				if(demCapNhat%2 == 1) {
+					statusCapNhat.setForeground(new Color(255, 107, 107));
+				}
+				statusCapNhat.setVisible(true);
+				demCapNhat++;
+			}
+		});
+		//---------------------------------------------------------------
 		JButton doimatkhau = new JButton("Đổi mật khẩu");
 		doimatkhau.setForeground(mainColor);
 		floor.add(doimatkhau);
@@ -164,23 +259,41 @@ public class SinhVienFrame extends JFrame{
 	    		    	@Override
 	    		    	public void mouseReleased(MouseEvent e) {
 	    		    		if(SwingUtilities.isLeftMouseButton(e)) {
-	    		    			
+	    		    			if(dmk.getMatKhauCu().equals(sv.getMatkhau()) && dmk.getMatKhauMoi().equals(dmk.getMatKhauMoiNhapLai())) {
+	    		    				session.getTransaction().begin();
+    		    					sv.setMatkhau(dmk.getMatKhauMoi());
+    		    					session.update("GiaoVu",sv);		
+	    		    				dmk.dispose();
+		    		    			setEnabled(true);
+		    		    			session.getTransaction().commit();
+	    		    			}
+	    		    			else {
+	    		    				dmk.getStatus().setText("Mật khẩu cũ hoặc mới không khớp");
+	    		    				dmk.getStatus().setVisible(true);
+	    		    			}
+	    		    		}
+	    		    	}
+	    		    });
+	    			
+	    			dmk.getCancel().addMouseListener(new MouseAdapter() {
+	    		    	@Override
+	    		    	public void mouseReleased(MouseEvent e) {
+	    		    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    		    			dmk.dispose();
+	    		    			setEnabled(true);
 	    		    		}
 	    		    	}
 	    		    });
 	    		}
 	    	}
-	    });
-		
-		westPanel.add(floor);			
-					
-		
+	    });		
+		westPanel.add(floor);						
+		//-----------------------------------------------------------------------------
 		westPanel.add(Box.createVerticalGlue());
 		westPanel.setVisible(false);
 		westPanel.setVisible(true);
 		centerPanel.setVisible(false);
 		centerPanel.setVisible(true);
-//		this.setEnabled(false);			
 	}
 	
 	public void dangkyhocphanClickAction(){
@@ -257,7 +370,9 @@ public class SinhVienFrame extends JFrame{
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				SinhVienFrame st = new SinhVienFrame(new SinhVien());
+				HibernateUtil hbn = new HibernateUtil("localhost", "3306", "CourseRegistrationSystem", "tramhuuduc", "19120484@Ubuntu");
+				Session session = hbn.getFACTORY().openSession();
+				SinhVienFrame st = new SinhVienFrame(new SinhVien("19120484", "Trầm Hữu Đức", "Nam", "SV19120484", "19120484", new LopHoc(), "19120484@student.hcmus.edu.vn"), session);
 			}
 		});
 	}
