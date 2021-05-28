@@ -11,7 +11,8 @@ import org.hibernate.query.Query;
 import org.hibernate.*;
 
 public class GiaoVuFrame extends JFrame{	
-	private GiaoVu gv;	
+	private GiaoVu gv;
+	private Session session;
 	private JButton home; 
 	
 	private JButton dangxuat;
@@ -31,8 +32,9 @@ public class GiaoVuFrame extends JFrame{
 	
 //	private BorderLayout mainLayout;
 	
-	public GiaoVuFrame(GiaoVu temp) {
+	public GiaoVuFrame(GiaoVu temp, Session sess) {
 		this.gv = temp;
+		this.session = sess;
 		home = new JButton("Home");
 		home.setForeground(mainColor);
 		home.addMouseListener(new MouseAdapter() {
@@ -52,6 +54,8 @@ public class GiaoVuFrame extends JFrame{
 		add(northPanel, BorderLayout.NORTH); northPanel.setVisible(true);
 		add(westPanel, BorderLayout.WEST); westPanel.setVisible(false);
 		add(centerPanel, BorderLayout.CENTER); homeClicked();		
+		westPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+		centerPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
 		
 		initUI();
 		
@@ -103,26 +107,66 @@ public class GiaoVuFrame extends JFrame{
 		quanlygiaovu.setVerticalTextPosition(SwingConstants.BOTTOM);
 		quanlygiaovu.setHorizontalTextPosition(SwingConstants.CENTER);
 		quanlygiaovu.setIcon(NewIcon("img/giaovu_icon.jpg", 37, 37));
+		quanlygiaovu.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			quanlygiaovuClickAction();
+	    		}
+	    	}
+	    });
 		
 		quanlymonhoc = new JButton("<html><center> Quản lý môn học<br /> . </center></html>");
 		quanlymonhoc.setVerticalTextPosition(SwingConstants.BOTTOM);
 		quanlymonhoc.setHorizontalTextPosition(SwingConstants.CENTER);
 		quanlymonhoc.setIcon(NewIcon("img/monhoc_icon.png", 37, 37));
+		quanlymonhoc.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			quanlymonhocClickAction();
+	    		}
+	    	}
+	    });
 		
 		quanlyhocky = new JButton("<html><center> Quản lý học kỳ<br /> . </center></html>");
 		quanlyhocky.setVerticalTextPosition(SwingConstants.BOTTOM);
 		quanlyhocky.setHorizontalTextPosition(SwingConstants.CENTER);
 		quanlyhocky.setIcon(NewIcon("img/hocky_icon.png", 37, 37));
+		quanlyhocky.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			quanlyhockyClickAction();
+	    		}
+	    	}
+	    });
 		
 		quanlylophoc = new JButton("<html><center> Quản lý lớp học<br /> . </center></html>");
 		quanlylophoc.setVerticalTextPosition(SwingConstants.BOTTOM);
 		quanlylophoc.setHorizontalTextPosition(SwingConstants.CENTER);
 		quanlylophoc.setIcon(NewIcon("img/lophoc_icon.png", 37, 37));
+		quanlylophoc.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			quanlylophocClickAction();
+	    		}
+	    	}
+	    });
 		
 		quanlydangkyhocphan = new JButton("<html><center>Quản lý đăng ký <br /> học phần</center></html>");
 		quanlydangkyhocphan.setVerticalTextPosition(SwingConstants.BOTTOM);
 		quanlydangkyhocphan.setHorizontalTextPosition(SwingConstants.CENTER);
 		quanlydangkyhocphan.setIcon(NewIcon("img/quanlydangkyhocphan_icon.png", 37, 37));
+		quanlydangkyhocphan.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			quanlydangkyhocphanClickAction();
+	    		}
+	    	}
+	    });		
 		
 		dangxuat.setForeground(mainColor);
 		thongtintaikhoan.setForeground(mainColor);
@@ -149,13 +193,13 @@ public class GiaoVuFrame extends JFrame{
 		JLabel mainImg = new JLabel();
 		mainImg.setIcon(new ImageIcon("img/dynamic_img.gif"));
 		centerPanel.add(mainImg, BorderLayout.CENTER);
-		centerPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
 		centerPanel.setVisible(false);
 		centerPanel.setVisible(true);
 	}
 	
 	public void thongtintaikhoanClickAction() {			
 			centerPanel.removeAll();
+			westPanel.removeAll();
 			
 			westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
 			westPanel.setPreferredSize(new Dimension(150, 0));
@@ -167,31 +211,165 @@ public class GiaoVuFrame extends JFrame{
 			JButton doimatkhau = new JButton("Đổi mật khẩu");
 			doimatkhau.setForeground(mainColor);
 			floor.add(doimatkhau);
+			doimatkhau.addMouseListener(new MouseAdapter() {
+		    	@Override
+		    	public void mouseReleased(MouseEvent e) {
+		    		if(SwingUtilities.isLeftMouseButton(e)) {
+		    			DoiMatKhau dmk = new DoiMatKhau();
+		    			setEnabled(false);
+		    			dmk.getOK().addMouseListener(new MouseAdapter() {
+		    		    	@Override
+		    		    	public void mouseReleased(MouseEvent e) {
+		    		    		if(SwingUtilities.isLeftMouseButton(e)) {
+		    		    			if(dmk.getMatKhauCu().equals(gv.getMatkhau()) && dmk.getMatKhauMoi().equals(dmk.getMatKhauMoiNhapLai())) {
+		    		    				session.getTransaction().begin();
+		    		    				Query q = session.createQuery("UPDATE GiaoVu set matkhau =: matkhaumoi  WHERE magv =: magv");
+		    		    				q.setParameter("matkhaumoi", dmk.getMatKhauMoi());
+		    		    				q.setParameter("magv", gv.getMagv());
+		    		    				if(q.executeUpdate() == 1) {
+		    		    					gv.setMatkhau(dmk.getMatKhauMoi());
+		    		    				}		    		    				
+		    		    				dmk.dispose();
+			    		    			setEnabled(true);
+			    		    			session.getTransaction().commit();
+		    		    			}
+		    		    			else {
+		    		    				System.out.println(dmk.getMatKhauCu());
+		    		    				System.out.println(dmk.getMatKhauMoi());
+		    		    				System.out.println(dmk.getMatKhauMoiNhapLai());
+		    		    				dmk.getStatus().setText("Mật khẩu cũ hoặc mới không khớp");
+		    		    				dmk.getStatus().setVisible(true);
+		    		    			}
+		    		    		}		    		    		
+		    		    	}
+		    		    });
+		    			
+		    			dmk.getCancel().addMouseListener(new MouseAdapter() {
+		    		    	@Override
+		    		    	public void mouseReleased(MouseEvent e) {
+		    		    		if(SwingUtilities.isLeftMouseButton(e)) {
+		    		    			dmk.dispose();
+		    		    			setEnabled(true);
+		    		    		}
+		    		    	}
+		    		    });
+		    		}
+		    	}
+		    });			
+			
 			
 			westPanel.add(floor);			
-			westPanel.add(Box.createVerticalGlue());			
-			westPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
-			westPanel.setVisible(true);			
-			
+			westPanel.add(Box.createVerticalGlue());
+			westPanel.setVisible(false);
+			westPanel.setVisible(true);
 			centerPanel.setVisible(false);
 			centerPanel.setVisible(true);
 //			this.setEnabled(false);			
 	}
 	
 	public void quanlygiaovuClickAction(){
-
+		centerPanel.removeAll();
+		westPanel.removeAll();
+		
+		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+		westPanel.setPreferredSize(new Dimension(150, 0));
+		westPanel.add(Box.createVerticalGlue());
+		JPanel floor = new JPanel();
+		floor.setLayout(new GridLayout(3,1));
+		
+		floor.add(home);
+		
+		westPanel.add(floor);			
+		
+		westPanel.add(Box.createVerticalGlue());
+		westPanel.setVisible(false);
+		westPanel.setVisible(true);			
+		centerPanel.setVisible(false);
+		centerPanel.setVisible(true);
 	}
+	
 	public void quanlymonhocClickAction(){
-
+		centerPanel.removeAll();
+		westPanel.removeAll();
+		
+		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+		westPanel.setPreferredSize(new Dimension(150, 0));
+		westPanel.add(Box.createVerticalGlue());
+		JPanel floor = new JPanel();
+		floor.setLayout(new GridLayout(3,1));
+		
+		floor.add(home);
+		
+		westPanel.add(floor);
+		
+		westPanel.add(Box.createVerticalGlue());
+		westPanel.setVisible(false);		
+		westPanel.setVisible(true);
+		centerPanel.setVisible(false);
+		centerPanel.setVisible(true);
 	}
+	
 	public void quanlyhockyClickAction(){
-
+		centerPanel.removeAll();
+		westPanel.removeAll();
+		
+		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+		westPanel.setPreferredSize(new Dimension(150, 0));
+		westPanel.add(Box.createVerticalGlue());
+		JPanel floor = new JPanel();
+		floor.setLayout(new GridLayout(3,1));
+		
+		floor.add(home);
+		
+		westPanel.add(floor);						
+		
+		westPanel.add(Box.createVerticalGlue());
+		westPanel.setVisible(false);
+		westPanel.setVisible(true);		
+		centerPanel.setVisible(false);
+		centerPanel.setVisible(true);
 	}
+	
 	public void quanlylophocClickAction(){
-
+		centerPanel.removeAll();
+		westPanel.removeAll();
+		
+		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+		westPanel.setPreferredSize(new Dimension(150, 0));
+		westPanel.add(Box.createVerticalGlue());
+		JPanel floor = new JPanel();
+		floor.setLayout(new GridLayout(3,1));
+		
+		floor.add(home);
+		
+		westPanel.add(floor);			
+		
+		westPanel.add(Box.createVerticalGlue());
+		westPanel.setVisible(false);
+		westPanel.setVisible(true);		
+		centerPanel.setVisible(false);
+		centerPanel.setVisible(true);
 	}
+	
 	public void quanlydangkyhocphanClickAction(){
-
+		centerPanel.removeAll();
+		westPanel.removeAll();
+		
+		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+		westPanel.setPreferredSize(new Dimension(150, 0));
+		westPanel.add(Box.createVerticalGlue());
+		JPanel floor = new JPanel();
+		floor.setLayout(new GridLayout(3,1));
+		
+		floor.add(home);
+		
+		westPanel.add(floor);			
+		
+		westPanel.add(Box.createVerticalGlue());
+		westPanel.setVisible(false);
+		westPanel.setVisible(true);		
+		centerPanel.setVisible(false);
+		centerPanel.setVisible(true);
 	}
 	
 	// Functionality----------------------------------
@@ -229,7 +407,9 @@ public class GiaoVuFrame extends JFrame{
 		EventQueue.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				GiaoVuFrame mf = new GiaoVuFrame(new GiaoVu());
+				HibernateUtil hbn = new HibernateUtil("localhost", "3306", "CourseRegistrationSystem", "tramhuuduc", "19120484@Ubuntu");
+				Session session = hbn.getFACTORY().openSession();
+				GiaoVuFrame mf = new GiaoVuFrame(new GiaoVu(), session);
 			}
 		});
 	}

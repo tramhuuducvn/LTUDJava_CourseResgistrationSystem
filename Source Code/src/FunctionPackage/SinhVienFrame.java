@@ -13,8 +13,9 @@ import org.hibernate.*;
 public class SinhVienFrame extends JFrame{
 	private SinhVien sv;
 	
+	private JButton home;
 	private JButton dangxuat;
-	private JButton quanlytaikhoan;
+	private JButton thongtintaikhoan;
 	private JButton dangkyhocphan;
 	private JButton ketquaDKHP;
 	
@@ -22,8 +23,21 @@ public class SinhVienFrame extends JFrame{
 	private JPanel westPanel;
 	private JPanel centerPanel;
 	
+	final Color mainColor = new Color(249, 108, 9);
+	final Color borderColor = new Color(200, 126, 74);
+	
 	public SinhVienFrame(SinhVien temp) {
 		this.sv = temp;
+		home = new JButton("Home"); home.setForeground(mainColor);
+		home.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			homeClicked();
+	    		}
+	    	}
+	    });	
+		
 		setLayout(new BorderLayout());
 		northPanel = new JPanel();
 		westPanel = new JPanel();
@@ -31,9 +45,9 @@ public class SinhVienFrame extends JFrame{
 		add(northPanel, BorderLayout.NORTH);
 		add(westPanel, BorderLayout.WEST);
 		add(centerPanel, BorderLayout.CENTER);
-		JLabel mainImg = new JLabel();
-		mainImg.setIcon(new ImageIcon("img/dynamic_img.gif"));
-		centerPanel.add(mainImg, BorderLayout.CENTER);
+		homeClicked();
+		westPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+		centerPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
 		
 		initUI();
 		
@@ -49,10 +63,9 @@ public class SinhVienFrame extends JFrame{
 		Image scaled = src.getImage().getScaledInstance(x, y, Image.SCALE_SMOOTH);
 		return new ImageIcon(scaled);
 	}
-	private void initUI() {
+	private void initUI() {	
 		northPanel.setLayout(new GridLayout(1,7));
 		northPanel.setPreferredSize(new Dimension(0, 100));
-		Color northColor = new Color(249, 108, 9);
 		
 		dangxuat = new JButton("<html><center> Đăng Xuất<br /> . </center></html>");
 		dangxuat.setIcon(NewIcon("img/logout_icon.png", 37, 37));
@@ -67,30 +80,151 @@ public class SinhVienFrame extends JFrame{
 	    		}
 	    	}
 	    });
-	    dangxuat.setForeground(northColor);
+	    dangxuat.setForeground(mainColor);
 	    northPanel.add(dangxuat);
 	    
-	    quanlytaikhoan = new JButton("<html><center> Thông tin tài khoản<br /> . </center></html>");
-		quanlytaikhoan.setVerticalTextPosition(SwingConstants.BOTTOM);
-		quanlytaikhoan.setHorizontalTextPosition(SwingConstants.CENTER);
-		quanlytaikhoan.setIcon(NewIcon("img/taikhoan_icon.png", 37, 37));
-		quanlytaikhoan.setForeground(northColor);
-		northPanel.add(quanlytaikhoan);
+	    thongtintaikhoan = new JButton("<html><center> Thông tin tài khoản<br /> . </center></html>");
+	    thongtintaikhoan.setVerticalTextPosition(SwingConstants.BOTTOM);
+	    thongtintaikhoan.setHorizontalTextPosition(SwingConstants.CENTER);
+	    thongtintaikhoan.setIcon(NewIcon("img/taikhoan_icon.png", 37, 37));
+	    thongtintaikhoan.setForeground(mainColor);
+	    northPanel.add(thongtintaikhoan);
+	    thongtintaikhoan.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			thongtintaikhoanClickAction();
+	    		}
+	    	}
+	    });		
 		
 		dangkyhocphan = new JButton("<html><center>Đăng ký học phần <br /> . </center></html>");
 		dangkyhocphan.setVerticalTextPosition(SwingConstants.BOTTOM);
 		dangkyhocphan.setHorizontalTextPosition(SwingConstants.CENTER);
 		dangkyhocphan.setIcon(NewIcon("img/dangkyhocphan_icon.jpg", 37, 37));
-		dangkyhocphan.setForeground(northColor);
+		dangkyhocphan.setForeground(mainColor);
 		northPanel.add(dangkyhocphan);
+		dangkyhocphan.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			dangkyhocphanClickAction();
+	    		}
+	    	}
+	    });
 		
 		ketquaDKHP = new JButton("<html><center>Kết quả <br /> đăng ký học phần</center></html>");
 		ketquaDKHP.setVerticalTextPosition(SwingConstants.BOTTOM);
 		ketquaDKHP.setHorizontalTextPosition(SwingConstants.CENTER);
 		ketquaDKHP.setIcon(NewIcon("img/ketquadkhp_icon.png", 37, 37));
-		ketquaDKHP.setForeground(northColor);
+		ketquaDKHP.setForeground(mainColor);
 		northPanel.add(ketquaDKHP);
+		ketquaDKHP.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			ketquaDKHPClickAction();
+	    		}
+	    	}
+	    });
 	}
+	
+	public void homeClicked() {
+		westPanel.removeAll();
+		westPanel.setVisible(false);
+		centerPanel.removeAll();
+		JLabel mainImg = new JLabel();
+		mainImg.setIcon(new ImageIcon("img/dynamic_img.gif"));
+		centerPanel.add(mainImg, BorderLayout.CENTER);
+		centerPanel.setVisible(false);
+		centerPanel.setVisible(true);
+	}
+	
+	public void thongtintaikhoanClickAction() {			
+		centerPanel.removeAll();
+		westPanel.removeAll();
+		
+		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+		westPanel.setPreferredSize(new Dimension(150, 0));
+		westPanel.add(Box.createVerticalGlue());
+		JPanel floor = new JPanel();
+		floor.setLayout(new GridLayout(3,1));
+		
+		floor.add(home);
+		JButton doimatkhau = new JButton("Đổi mật khẩu");
+		doimatkhau.setForeground(mainColor);
+		floor.add(doimatkhau);
+		doimatkhau.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			DoiMatKhau dmk = new DoiMatKhau();
+	    			setEnabled(false);
+	    			dmk.getOK().addMouseListener(new MouseAdapter() {
+	    		    	@Override
+	    		    	public void mouseReleased(MouseEvent e) {
+	    		    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    		    			
+	    		    		}
+	    		    	}
+	    		    });
+	    		}
+	    	}
+	    });
+		
+		westPanel.add(floor);			
+					
+		
+		westPanel.add(Box.createVerticalGlue());
+		westPanel.setVisible(false);
+		westPanel.setVisible(true);
+		centerPanel.setVisible(false);
+		centerPanel.setVisible(true);
+//		this.setEnabled(false);			
+	}
+	
+	public void dangkyhocphanClickAction(){
+		centerPanel.removeAll();
+		westPanel.removeAll();
+		
+		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+		westPanel.setPreferredSize(new Dimension(150, 0));
+		westPanel.add(Box.createVerticalGlue());
+		JPanel floor = new JPanel();
+		floor.setLayout(new GridLayout(3,1));
+		
+		floor.add(home);
+		
+		westPanel.add(floor);			
+		
+		westPanel.add(Box.createVerticalGlue());
+		westPanel.setVisible(false);
+		westPanel.setVisible(true);		
+		centerPanel.setVisible(false);
+		centerPanel.setVisible(true);
+	}
+	
+	public void ketquaDKHPClickAction(){
+		centerPanel.removeAll();
+		westPanel.removeAll();
+		
+		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
+		westPanel.setPreferredSize(new Dimension(150, 0));
+		westPanel.add(Box.createVerticalGlue());
+		JPanel floor = new JPanel();
+		floor.setLayout(new GridLayout(3,1));
+		
+		floor.add(home);
+		
+		westPanel.add(floor);			
+		
+		westPanel.add(Box.createVerticalGlue());
+		westPanel.setVisible(false);
+		westPanel.setVisible(true);		
+		centerPanel.setVisible(false);
+		centerPanel.setVisible(true);
+	}
+	
 	
 	public static void main(String[] args) {
 		try {

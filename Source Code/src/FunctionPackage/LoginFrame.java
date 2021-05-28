@@ -163,7 +163,8 @@ public class LoginFrame extends JFrame{
 								status.setVisible(true);
 								
 								System.out.println(gv.toString());
-								GiaoVuFrame gvm = new GiaoVuFrame(gv);
+								GiaoVuFrame gvm = new GiaoVuFrame(gv, session);
+//								session.close();
 								dispose();
 							}
 							else {
@@ -173,8 +174,8 @@ public class LoginFrame extends JFrame{
 							}
 						}
 						//------------------------------------------------------------
-						query = session.createQuery("FROM SinhVien as sv WHERE sv.taikhoan =: " + taikhoan);
-						query.setParameter(taikhoan, taikhoan);
+						query = session.createQuery("FROM SinhVien as sv WHERE sv.taikhoan =: taikhoan");
+						query.setParameter("taikhoan", taikhoan);
 						if(query.list().isEmpty() == false) {
 							k = true;
 							SinhVien sv = (SinhVien) query.list().get(0);
@@ -185,6 +186,7 @@ public class LoginFrame extends JFrame{
 								
 								System.out.println(sv.toString());								
 								SinhVienFrame svm = new SinhVienFrame(sv);
+//								session.close();
 								dispose();
 							}
 							else {
@@ -198,7 +200,8 @@ public class LoginFrame extends JFrame{
 							status.setText(" --- This account doesn't exist, or wrong ---");
 							status.setForeground(new Color(215, 50, 50));
 							status.setVisible(true);
-						}																		
+						}	
+//						session.close();
 					}
 					catch(HibernateException e1) {
 						System.out.println(e1.getMessage());

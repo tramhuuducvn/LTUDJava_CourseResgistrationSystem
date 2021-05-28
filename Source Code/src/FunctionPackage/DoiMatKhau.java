@@ -7,10 +7,11 @@ import java.awt.event.*;
 public class DoiMatKhau extends JFrame{
 	private JButton ok;
 	private JButton cancel;
+	private JLabel status = new JLabel();
 	
-	JPasswordField matkhaucuTextField;
-	JPasswordField matkhaumoiTextField;
-	JPasswordField nhaplaiTextField;
+	private JPasswordField matkhaucuTextField;
+	private JPasswordField matkhaumoiTextField;
+	private JPasswordField nhaplaiTextField;
 	
 	public DoiMatKhau() {
 		JPanel floor = new JPanel();
@@ -37,7 +38,7 @@ public class DoiMatKhau extends JFrame{
 		JPanel floor3 = new JPanel();
 		floor3.setLayout(new BoxLayout(floor3, BoxLayout.X_AXIS));
 		JLabel nhaplaiLabel = new JLabel(" Nhập lại mật khẩu mới : ");
-		JPasswordField nhaplaiTextField = new JPasswordField();
+		nhaplaiTextField = new JPasswordField();
 		floor3.setMaximumSize(new Dimension(2000, 37));
 		floor3.add(nhaplaiLabel);
 		floor3.add(nhaplaiTextField);
@@ -46,6 +47,11 @@ public class DoiMatKhau extends JFrame{
 				
 		JPanel floor4 = new JPanel();
 		floor4.setLayout(new BoxLayout(floor4, BoxLayout.X_AXIS));
+		
+		status = new JLabel();
+		status.setVisible(false);
+		floor4.add(status);
+		
 		floor4.add(Box.createHorizontalGlue());
 		ok = new JButton("OK");
 		ok.setPreferredSize(new Dimension(100, 100));
@@ -62,9 +68,13 @@ public class DoiMatKhau extends JFrame{
 		
 		add(floor);
 		setTitle("Change Password");
-		setSize(500, 170);
+		setSize(520, 225);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent windowEvent) {
+                dispose();
+            }
+        });
 		setVisible(true);		
 	}
 	
@@ -86,6 +96,10 @@ public class DoiMatKhau extends JFrame{
 	
 	public JButton getCancel() {
 		return cancel;
+	}
+	
+	public JLabel getStatus() {
+		return status;
 	}
 	
 	public static void main(String[] args) {

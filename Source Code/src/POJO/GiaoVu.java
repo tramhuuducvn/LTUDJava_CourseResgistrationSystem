@@ -24,6 +24,14 @@ public class GiaoVu implements Serializable {
 		this.matkhau = "102";
 	}
 	
+	public GiaoVu(String magv, String hoten, String taikhoan, String matkhau) {
+		super();
+		this.magv = magv;
+		this.hoten = hoten;
+		this.taikhoan = taikhoan;
+		this.matkhau = matkhau;
+	}
+
 	public String getMagv() {
 		return magv;
 	}
