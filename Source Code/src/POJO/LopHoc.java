@@ -26,6 +26,9 @@ public class LopHoc implements Serializable{
 		this.malop = "19CTT3";
 	}
 	
+	public LopHoc(String lop) {
+		this.malop = lop;
+	}
 	
 	public String getMalop() {
 		return malop;

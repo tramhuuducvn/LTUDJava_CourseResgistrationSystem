@@ -178,16 +178,19 @@ public class SinhVienFrame extends JFrame{
 		centerPanel.add(floor1);
 		centerPanel.add(Box.createRigidArea(new Dimension(0, 3)));
 		
-		JPanel floor2 = new JPanel(); floor2.setLayout(new BoxLayout(floor2, BoxLayout.X_AXIS));
+		JPanel floor2 = new JPanel(); 
+		floor2.setLayout(new BoxLayout(floor2, BoxLayout.X_AXIS));
 		floor2.setMaximumSize(new Dimension(500, 37));
 		JLabel gioitinhLabel = new JLabel("Giới tính: ");
 		String[] gt = {"Nam", "Nữ"};
 		JComboBox gioitinhCmb = new JComboBox(gt);
-		floor2.add(gioitinhLabel); floor2.add(gioitinhCmb);
+		floor2.add(gioitinhLabel); 
+		floor2.add(gioitinhCmb);
 		centerPanel.add(floor2);
 		centerPanel.add(Box.createRigidArea(new Dimension(0, 3)));
 		
-		JPanel floor3 = new JPanel(); floor3.setLayout(new BoxLayout(floor3, BoxLayout.X_AXIS));
+		JPanel floor3 = new JPanel(); // Lấy danh sách lớp đưa vào combobox
+		floor3.setLayout(new BoxLayout(floor3, BoxLayout.X_AXIS));
 		floor3.setMaximumSize(new Dimension(500, 37));
 		JLabel lophocLabel = new JLabel("Lớp học:   ");
 		floor3.add(lophocLabel);

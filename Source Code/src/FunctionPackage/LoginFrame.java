@@ -129,7 +129,7 @@ public class LoginFrame extends JFrame{
 		floor7.add(status);
 		
 		floor7.add(Box.createHorizontalGlue());
-		JButton cancel = new JButton("Cancel"); cancel.setForeground(c);
+		JButton cancel = new JButton("Exit"); cancel.setForeground(c);
 		floor7.add(cancel);
 		cancel.setIcon(setSizeImage("img/cancel_icon.png", 20, 20));
 		cancel.setPreferredSize(new Dimension(100, 100));

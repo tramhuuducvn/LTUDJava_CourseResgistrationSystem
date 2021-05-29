@@ -7,7 +7,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import javax.swing.plaf.*;
-import org.hibernate.query.Query;
+import javax.swing.table.DefaultTableModel;
+
+import org.hibernate.query.*;
+
+import com.mysql.cj.xdevapi.Table;
+
 import org.hibernate.*;
 
 public class GiaoVuFrame extends JFrame{	
@@ -47,7 +52,7 @@ public class GiaoVuFrame extends JFrame{
 	    });
 		
 //		mainLayout = new BorderLayout();
-		setLayout(new BorderLayout(10, 10));
+		setLayout(new BorderLayout(7, 7));
 		northPanel = new JPanel();
 		westPanel = new JPanel();
 		centerPanel = new JPanel();
@@ -315,17 +320,96 @@ public class GiaoVuFrame extends JFrame{
 	public void quanlygiaovuClickAction(){
 		centerPanel.removeAll();
 		westPanel.removeAll();
+		// CenterPanel------------------------------------------------
+		centerPanel.setLayout(new BorderLayout(0, 3));
 		
+		String columns[] = {"Mã giáo vụ", "Họ tên", "Chọn"};
+		Object[][] data = {
+	            {"Buy", "IBM", false},
+	            {"Sell", "MicroSoft", true},
+	            {"Sell", "Apple", true},
+	            {"Buy", "Nortel", false}
+	        };
+		DefaultTableModel gvDTable = new DefaultTableModel(data, columns);
+		JTable gvTable = new JTable(gvDTable) {
+			@Override
+			public Class getColumnClass(int column) {
+				switch(column) {
+					case 0:
+						return String.class;
+					case 1: 
+						return String.class;
+					case 2:
+						return Boolean.class;
+					default:
+						return Object.class;
+				}
+			}
+		};
+		gvTable.setPreferredScrollableViewportSize(gvTable.getPreferredSize());
+		gvTable.setFillsViewportHeight(true);
+		gvTable.getColumnModel().getColumn(2).setMaxWidth(60);
+		
+		JScrollPane tablePanel = new JScrollPane();
+		tablePanel.setViewportView(gvTable);
+		tablePanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+		centerPanel.add(tablePanel, BorderLayout.CENTER);
+		
+		JPanel findPanel = new JPanel();
+		findPanel.setLayout(new BoxLayout(findPanel, BoxLayout.X_AXIS));
+		JLabel findLabel = new JLabel(" Nhập tên tài khoản: ");
+		findPanel.add(findLabel);
+		JTextField findTextField = new JTextField();
+		findPanel.add(findTextField);
+		JButton find = new JButton("Tìm kiếm");
+		find.setMaximumSize(new Dimension(125, 100));
+		findPanel.add(find);
+		findPanel.add(Box.createRigidArea(new Dimension(700, 0)));
+		centerPanel.add(findPanel, BorderLayout.NORTH);
+		// WestPanel--------------------------------------------------
 		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
 		westPanel.setPreferredSize(new Dimension(150, 0));
 		westPanel.add(Box.createVerticalGlue());
-		JPanel floor = new JPanel();
-		floor.setLayout(new GridLayout(3,1));
+		JPanel wfloor = new JPanel();
+		wfloor.setLayout(new GridLayout(4,1));		
+		wfloor.add(home);		
 		
-		floor.add(home);
+		JButton themgiaovu = new JButton("Thêm giáo vụ");themgiaovu.setForeground(mainColor);
+		wfloor.add(themgiaovu);
+		themgiaovu.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			
+	    		}
+	    	}
+	    });
 		
-		westPanel.add(floor);			
 		
+		JButton capnhatgiaovu = new JButton("Cập nhật");capnhatgiaovu.setForeground(mainColor);
+		wfloor.add(capnhatgiaovu);
+		capnhatgiaovu.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			
+	    		}
+	    	}
+	    });
+		
+		JButton xoagiaovu = new JButton("Xóa");xoagiaovu.setForeground(mainColor);
+		wfloor.add(xoagiaovu);
+		xoagiaovu.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			
+	    		}
+	    	}
+	    });
+		
+		//------------------------------------------------------
+		westPanel.add(wfloor);		
 		westPanel.add(Box.createVerticalGlue());
 		westPanel.setVisible(false);
 		westPanel.setVisible(true);			

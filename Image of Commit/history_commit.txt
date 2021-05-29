@@ -41,3 +41,10 @@ mật khẩu thành công
 
 12.png: 22h45 ngày 27/05/2021
 --> setup bố cục giao diện cho các chức năng của Giáo Vụ
+
+14.png: 17h33 ngày 28/05/2021
+--> Tạo chức năng đổi mật khẩu, cho giáo vụ + sinh viên
+
+15.png: 00h18 ngày 29/05/2021 #+5 điểm
+--> Tạo chức năng xem thông tin + chỉnh sửa + cập nhật thông tin cho 
+giáo vụ và sinh viên

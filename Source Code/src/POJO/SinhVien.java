@@ -39,6 +39,17 @@ public class SinhVien implements Serializable{
 	
 //----------------------------------------------------------------------
 	public SinhVien() {}
+	
+	public SinhVien(String mssv, String hoten, String gioitinh, LopHoc lop) {
+		this.mssv = mssv;
+		this.hoten = hoten;
+		this.gioitinh = gioitinh;
+		this.lop = lop;
+		this.taikhoan = "SV" + mssv;
+		this.email = mssv + "@student.hcmus.edu.vn";
+		this.matkhau = mssv;
+	}
+	
 	public SinhVien(String mssv, String hoten, String gioitinh, String taikhoan, String matkhau, LopHoc lop, String email) {
 		super();
 		this.mssv = mssv;
