@@ -324,7 +324,6 @@ public class GiaoVuFrame extends JFrame{
 		centerPanel.setLayout(new BorderLayout(0, 3));
 		
 		String columns[] = {"Chọn", "Tài khoản", "Mã giáo vụ", "Họ tên"};
-//		Object[][] data = {{false, "abc", "abc"}};
 		DefaultTableModel gvDTable = new DefaultTableModel(columns, 0);
 		JTable gvTable = new JTable(gvDTable) {
 			@Override
@@ -343,7 +342,7 @@ public class GiaoVuFrame extends JFrame{
 				}
 			}
 		};
-//		gvTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JCheckBox()));
+		
 		gvTable.setPreferredScrollableViewportSize(gvTable.getPreferredSize());
 		gvTable.setFillsViewportHeight(true);
 		gvTable.getColumnModel().getColumn(0).setMaxWidth(57);
@@ -378,7 +377,6 @@ public class GiaoVuFrame extends JFrame{
 	    			String ret = findTextField.getText();
 	    			for(int i = 0; i < gvTable.getRowCount(); i++) {
 	    				if(ret.equals(gvDTable.getValueAt(i, 1))) {
-	    					gvDTable.setValueAt(true, i, 0);
 	    					gvTable.setRowSelectionInterval(i, i);
 	    					gvTable.scrollRectToVisible(gvTable.getCellRect(i, 0, true));
 	    				}
@@ -397,7 +395,8 @@ public class GiaoVuFrame extends JFrame{
 		wfloor.setLayout(new GridLayout(4,1));		
 		wfloor.add(home);		
 		
-		JButton themgiaovu = new JButton("Thêm giáo vụ");themgiaovu.setForeground(mainColor);
+		JButton themgiaovu = new JButton("Thêm giáo vụ");
+		themgiaovu.setForeground(mainColor);
 		wfloor.add(themgiaovu);
 		themgiaovu.addMouseListener(new MouseAdapter() {
 	    	@Override
@@ -432,7 +431,8 @@ public class GiaoVuFrame extends JFrame{
 		    					GiaoVu temp = session.get(GiaoVu.class, idgv);	    					
 		    					temp.setHoten((String)(gvDTable.getValueAt(i, 3)));
 		    					session.update(temp);
-		    					session.getTransaction().commit();		    					
+		    					session.getTransaction().commit();	
+		    					statusCapNhat.setText("Cập nhật thành công!");
 		    					showStatusCapNhat();
 	    				}
 	    			}
@@ -475,20 +475,154 @@ public class GiaoVuFrame extends JFrame{
 	public void quanlymonhocClickAction(){
 		centerPanel.removeAll();
 		westPanel.removeAll();
+		// CenterPanel------------------------------------------------
+		centerPanel.setLayout(new BorderLayout(0, 3));
 		
+		String columns[] = {"Chọn", "Mã môn học", "Tên môn học", "Số tín chỉ"};
+		DefaultTableModel mhDTable = new DefaultTableModel(columns, 0);
+		JTable mhTable = new JTable(mhDTable) {
+			@Override
+			public Class getColumnClass(int column) {
+				switch(column) {
+					case 0:
+						return Boolean.class;
+					case 1: 
+						return String.class;
+					case 2:
+						return String.class;
+					case 3:
+						return Integer.class;
+					default:
+						return Object.class;
+				}
+			}
+		};
+		mhTable.setPreferredScrollableViewportSize(mhTable.getPreferredSize());
+		mhTable.setFillsViewportHeight(true);
+		mhTable.getColumnModel().getColumn(0).setMaxWidth(57);
+		mhTable.setRowHeight(37);
+		Query q1 = session.createQuery("FROM MonHoc");
+		java.util.List<MonHoc> monhocList  = q1.list();
+		for(MonHoc t : monhocList) {
+			Object ob[] = {false, t.getMamonhoc(), t.getTenmonhoc(), t.getSotinchi()};
+			mhDTable.addRow(ob);
+		}
+		
+		JScrollPane tablePanel = new JScrollPane();
+		tablePanel.setViewportView(mhTable);
+		tablePanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+		centerPanel.add(tablePanel, BorderLayout.CENTER);
+		
+		JPanel findPanel = new JPanel();
+		findPanel.setLayout(new BoxLayout(findPanel, BoxLayout.X_AXIS));
+		JLabel findLabel = new JLabel(" Nhập mã môn học: ");
+		findPanel.add(findLabel);
+		JTextField findTextField = new JTextField();
+		findPanel.add(findTextField);
+		JButton find = new JButton("Tìm kiếm");
+		find.setMaximumSize(new Dimension(125, 100));
+		findPanel.add(find);
+		findPanel.add(Box.createRigidArea(new Dimension(700, 0)));
+		centerPanel.add(findPanel, BorderLayout.NORTH);
+		find.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			String ret = findTextField.getText();
+	    			for(int i = 0; i < mhTable.getRowCount(); i++) {
+	    				if(ret.equals(mhDTable.getValueAt(i, 1))) {
+	    					mhTable.setRowSelectionInterval(i, i);
+	    					mhTable.scrollRectToVisible(mhTable.getCellRect(i, 0, true));
+	    				}
+	    			}
+	    		}
+	    	}
+	    });
+		statusCapNhat = new JLabel();
+		statusCapNhat.setVisible(false);
+		centerPanel.add(statusCapNhat, BorderLayout.SOUTH);
+		// WestPanel--------------------------------------------------
 		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
 		westPanel.setPreferredSize(new Dimension(150, 0));
 		westPanel.add(Box.createVerticalGlue());
-		JPanel floor = new JPanel();
-		floor.setLayout(new GridLayout(3,1));
+		JPanel wfloor = new JPanel();
+		wfloor.setLayout(new GridLayout(4,1));		
+		wfloor.add(home);		
 		
-		floor.add(home);
+		JButton themmonhoc = new JButton("Thêm môn học");
+		themmonhoc.setForeground(mainColor);
+		wfloor.add(themmonhoc);
+		themmonhoc.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			ThemMonHocFrame themMHF = new ThemMonHocFrame(session);
+	    			themMHF.getOk().addMouseListener(new MouseAdapter() {
+	    				@Override
+	    				public void mouseReleased(MouseEvent e) {
+	    					if(SwingUtilities.isLeftMouseButton(e)) {
+	    						MonHoc temp = themMHF.getMonHoc();
+	    						Object[] ob = {false, temp.getMamonhoc(), temp.getTenmonhoc(), temp.getSotinchi()};
+	    						mhDTable.addRow(ob);
+	    					}
+	    				}
+	    			});		
+	    		}
+	    	}
+	    });
 		
-		westPanel.add(floor);
 		
+		JButton capnhat = new JButton("Cập nhật");capnhat.setForeground(mainColor);
+		wfloor.add(capnhat);
+		capnhat.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			for(int i = 0; i < mhTable.getRowCount(); i++) {
+	    				if(mhDTable.getValueAt(i, 0).equals(true)) {
+		    					session.getTransaction().begin();
+		    					String id = (String)mhDTable.getValueAt(i, 1);
+		    					MonHoc temp = session.get(MonHoc.class, id);	    					
+		    					temp.setTenmonhoc((String)(mhDTable.getValueAt(i, 2)));
+		    					temp.setSotinchi((int)(mhDTable.getValueAt(i, 3)));
+		    					session.update(temp);
+		    					session.getTransaction().commit();		
+		    					statusCapNhat.setText("Cập nhật thành công!");
+		    					showStatusCapNhat();
+	    				}
+	    			}
+	    		}
+	    	}
+	    });
+		
+		JButton xoamonhoc = new JButton("Xóa");xoamonhoc.setForeground(mainColor);
+		wfloor.add(xoamonhoc);
+		xoamonhoc.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			for(int i = 0; i < mhTable.getRowCount(); i++) {
+	    				if(mhDTable.getValueAt(i, 0).equals(true)) {
+		    					session.getTransaction().begin();
+		    					String id = (String)mhDTable.getValueAt(i, 1);
+		    					MonHoc temp = session.get(MonHoc.class, id);	    					
+		    					
+		    					session.delete(temp);
+		    					session.getTransaction().commit();		    					
+		    					mhDTable.removeRow(i);
+		    					statusCapNhat.setText("Xóa thành công!");
+		    					showStatusCapNhat();
+	    				}
+	    			}
+	    		}
+	    	}
+	    });
+		
+		//------------------------------------------------------
+		westPanel.add(wfloor);		
 		westPanel.add(Box.createVerticalGlue());
-		westPanel.setVisible(false);		
-		westPanel.setVisible(true);
+		westPanel.setVisible(false);
+		westPanel.setVisible(true);			
 		centerPanel.setVisible(false);
 		centerPanel.setVisible(true);
 	}

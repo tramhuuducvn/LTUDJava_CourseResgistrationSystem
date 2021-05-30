@@ -16,6 +16,15 @@ public class MonHoc implements Serializable{
 	@Column(name = "sotinchi")
 	private int sotinchi;
 	//---------------------------------------------------------
+	public MonHoc() {
+		
+	}
+	public MonHoc(String mamonhoc, String tenmonhoc, int sotinchi) {
+		this.mamonhoc = mamonhoc;
+		this.tenmonhoc = tenmonhoc;
+		this.sotinchi = sotinchi;
+	}
+	
 	public String getMamonhoc() {
 		return mamonhoc;
 	}
