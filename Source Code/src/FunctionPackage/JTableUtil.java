@@ -5,16 +5,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 public class JTableUtil{
-    public static void setCellsAlignment(JTable table, int alignment)
+    public static void setCellsAlignment(JTable table, int alignment, int column)
     {
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(alignment);
 
         TableModel tableModel = table.getModel();
-
-        for (int columnIndex = 0; columnIndex < tableModel.getColumnCount(); columnIndex++)
-        {
-            table.getColumnModel().getColumn(columnIndex).setCellRenderer(rightRenderer);
-        }
+        table.getColumnModel().getColumn(column).setCellRenderer(rightRenderer);
     }
 }

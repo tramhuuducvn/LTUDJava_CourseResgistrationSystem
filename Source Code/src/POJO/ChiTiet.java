@@ -13,6 +13,8 @@ public class ChiTiet implements Serializable{
 	@Column(name = "madot")
 	private int madot;
 	
+	public ChiTiet() {}
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 

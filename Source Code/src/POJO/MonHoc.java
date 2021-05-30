@@ -48,7 +48,13 @@ public class MonHoc implements Serializable{
 	public int getSotinchi() {
 		return sotinchi;
 	}
-
+	
+	public String getSTC() {
+		return String.valueOf(this.sotinchi);
+	}
+	public void setSTC(String stc) {
+		this.sotinchi = Integer.parseInt(stc);
+	}
 
 	public void setSotinchi(int sotinchi) {
 		this.sotinchi = sotinchi;

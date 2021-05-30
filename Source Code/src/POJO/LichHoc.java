@@ -35,6 +35,8 @@ public class LichHoc implements Serializable{
 	private Set<DotDangKyHocPhan> DanhSachDDKHP;
 	
 	//-------------------------------------------------------------
+	public LichHoc() {}
+	
 	public int getMathongtin() {
 		return mathongtin;
 	}

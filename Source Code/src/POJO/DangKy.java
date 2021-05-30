@@ -14,7 +14,7 @@ public class DangKy implements Serializable{
 	@JoinColumn(name = "mssv")
 	private String mssv;
 	//Method-----------------------------------------------------	
-	
+	public DangKy() {}
 	//-----------------------------------------------------------
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

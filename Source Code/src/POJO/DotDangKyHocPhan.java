@@ -30,6 +30,9 @@ public class DotDangKyHocPhan implements Serializable {
 	)
 	private Set<LichHoc> DanhSachHocPhan;
 	
+	
+	public DotDangKyHocPhan() {}
+	
 	public static void main(String[] args) {
 
 	}

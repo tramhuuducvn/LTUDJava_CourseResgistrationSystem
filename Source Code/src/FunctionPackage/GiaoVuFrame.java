@@ -13,6 +13,7 @@ import org.hibernate.*;
 
 public class GiaoVuFrame extends JFrame{	
 	private GiaoVu gv;
+	private HocKy hockyhientai;
 	private Session session;
 	private JButton home; 
 	
@@ -34,8 +35,16 @@ public class GiaoVuFrame extends JFrame{
 //	private BorderLayout mainLayout;
 	
 	public GiaoVuFrame(GiaoVu temp, Session sess) {
-		this.gv = temp;
 		this.session = sess;
+		this.gv = temp;
+		
+		Query q = session.createQuery("FROM HocKy WHERE trangthai =: tt");
+		q.setParameter("tt", true);
+		java.util.List<HocKy> tempList1 = q.list();
+		if(!tempList1.isEmpty()) {
+			hockyhientai = tempList1.get(0);
+		}	
+		
 		home = new JButton("Home");
 		home.setForeground(mainColor);
 		home.addMouseListener(new MouseAdapter() {
@@ -425,7 +434,7 @@ public class GiaoVuFrame extends JFrame{
 	    	public void mouseReleased(MouseEvent e) {
 	    		if(SwingUtilities.isLeftMouseButton(e)) {
 	    			for(int i = 0; i < gvTable.getRowCount(); i++) {
-	    				if(gvDTable.getValueAt(i, 0).equals(true)) {
+	    				if(gvDTable.getValueAt(i, 0).toString() == "true") {
 		    					session.getTransaction().begin();
 		    					String idgv = (String)gvDTable.getValueAt(i, 2);
 		    					GiaoVu temp = session.get(GiaoVu.class, idgv);	    					
@@ -448,15 +457,16 @@ public class GiaoVuFrame extends JFrame{
 	    		if(SwingUtilities.isLeftMouseButton(e)) {
 	    			for(int i = 0; i < gvTable.getRowCount(); i++) {
 	    				if(gvDTable.getValueAt(i, 0).equals(true)) {
-		    					session.getTransaction().begin();
-		    					String idgv = (String)gvDTable.getValueAt(i, 2);
-		    					GiaoVu temp = session.get(GiaoVu.class, idgv);	    					
-		    					temp.setHoten((String)(gvDTable.getValueAt(i, 3)));
-		    					session.delete(temp);
-		    					session.getTransaction().commit();		    					
-		    					gvDTable.removeRow(i);
-		    					statusCapNhat.setText("Xóa thành công!");
-		    					showStatusCapNhat();
+	    					session.getTransaction().begin();
+	    					String idgv = (String)gvDTable.getValueAt(i, 2);
+	    					GiaoVu temp = session.get(GiaoVu.class, idgv);	    					
+	    					temp.setHoten((String)(gvDTable.getValueAt(i, 3)));
+	    					session.delete(temp);
+	    					session.getTransaction().commit();		    					
+	    					gvDTable.removeRow(i);
+	    					statusCapNhat.setText("Xóa thành công!");
+	    					showStatusCapNhat();
+	    					i--;
 	    				}
 	    			}
 	    		}
@@ -491,7 +501,7 @@ public class GiaoVuFrame extends JFrame{
 					case 2:
 						return String.class;
 					case 3:
-						return Integer.class;
+						return String.class;
 					default:
 						return Object.class;
 				}
@@ -504,7 +514,7 @@ public class GiaoVuFrame extends JFrame{
 		Query q1 = session.createQuery("FROM MonHoc");
 		java.util.List<MonHoc> monhocList  = q1.list();
 		for(MonHoc t : monhocList) {
-			Object ob[] = {false, t.getMamonhoc(), t.getTenmonhoc(), t.getSotinchi()};
+			Object ob[] = {false, t.getMamonhoc(), t.getTenmonhoc(), t.getSTC()};
 			mhDTable.addRow(ob);
 		}
 		
@@ -572,7 +582,8 @@ public class GiaoVuFrame extends JFrame{
 	    });
 		
 		
-		JButton capnhat = new JButton("Cập nhật");capnhat.setForeground(mainColor);
+		JButton capnhat = new JButton("Cập nhật");
+		capnhat.setForeground(mainColor);
 		wfloor.add(capnhat);
 		capnhat.addMouseListener(new MouseAdapter() {
 	    	@Override
@@ -580,15 +591,15 @@ public class GiaoVuFrame extends JFrame{
 	    		if(SwingUtilities.isLeftMouseButton(e)) {
 	    			for(int i = 0; i < mhTable.getRowCount(); i++) {
 	    				if(mhDTable.getValueAt(i, 0).equals(true)) {
-		    					session.getTransaction().begin();
-		    					String id = (String)mhDTable.getValueAt(i, 1);
-		    					MonHoc temp = session.get(MonHoc.class, id);	    					
-		    					temp.setTenmonhoc((String)(mhDTable.getValueAt(i, 2)));
-		    					temp.setSotinchi((int)(mhDTable.getValueAt(i, 3)));
-		    					session.update(temp);
-		    					session.getTransaction().commit();		
-		    					statusCapNhat.setText("Cập nhật thành công!");
-		    					showStatusCapNhat();
+	    					session.getTransaction().begin();
+	    					String id = (String)mhDTable.getValueAt(i, 1);
+	    					MonHoc temp = session.get(MonHoc.class, id);	    					
+	    					temp.setTenmonhoc((String)(mhDTable.getValueAt(i, 2)));
+	    					temp.setSTC((String)(mhDTable.getValueAt(i, 3)));
+	    					session.update(temp);
+	    					session.getTransaction().commit();		
+	    					statusCapNhat.setText("Cập nhật thành công!");
+	    					showStatusCapNhat();
 	    				}
 	    			}
 	    		}
@@ -603,15 +614,16 @@ public class GiaoVuFrame extends JFrame{
 	    		if(SwingUtilities.isLeftMouseButton(e)) {
 	    			for(int i = 0; i < mhTable.getRowCount(); i++) {
 	    				if(mhDTable.getValueAt(i, 0).equals(true)) {
-		    					session.getTransaction().begin();
-		    					String id = (String)mhDTable.getValueAt(i, 1);
-		    					MonHoc temp = session.get(MonHoc.class, id);	    					
-		    					
-		    					session.delete(temp);
-		    					session.getTransaction().commit();		    					
-		    					mhDTable.removeRow(i);
-		    					statusCapNhat.setText("Xóa thành công!");
-		    					showStatusCapNhat();
+	    					session.getTransaction().begin();
+	    					String id = (String)mhDTable.getValueAt(i, 1);
+	    					MonHoc temp = session.get(MonHoc.class, id);	    					
+	    					
+	    					session.delete(temp);
+	    					session.getTransaction().commit();		    					
+	    					mhDTable.removeRow(i);
+	    					statusCapNhat.setText("Xóa thành công!");
+	    					showStatusCapNhat();
+	    					i--;
 	    				}
 	    			}
 	    		}
@@ -630,20 +642,182 @@ public class GiaoVuFrame extends JFrame{
 	public void quanlyhockyClickAction(){
 		centerPanel.removeAll();
 		westPanel.removeAll();
+		// CenterPanel------------------------------------------------
+		centerPanel.setLayout(new BorderLayout(0, 3));
 		
+		String columns[] = {"Chọn", "Năm học", "Mã học kỳ", "Ngày bắt đầu", "Ngày kết thúc", "Trạng thái"};
+		DefaultTableModel dTable = new DefaultTableModel(columns, 0);
+		JTable table = new JTable(dTable) {
+			@Override
+			public Class getColumnClass(int column) {
+				switch(column) {
+					case 0:
+						return Boolean.class;
+					case 1: 
+						return Integer.class;
+					case 2:
+						return String.class;
+					case 3: 
+						return Date.class;
+					case 4:
+						return Date.class;
+					case 5:
+						return String.class;
+					default:
+						return Object.class;
+				}
+			}
+		};
+		table.setPreferredScrollableViewportSize(table.getPreferredSize());
+		table.setFillsViewportHeight(true);
+		table.getColumnModel().getColumn(0).setMaxWidth(57);
+		table.setRowHeight(37);
+		JTableUtil.setCellsAlignment(table, SwingConstants.LEFT, 1);
+		Query q1 = session.createQuery("FROM HocKy");
+		java.util.List<HocKy> list  = q1.list();
+		for(HocKy t : list) {
+			Object ob[] = {false, t.getNamhoc(), t.getMahocky(), t.getNgaybatdau(), t.getNgayketthuc(), t.getTrangThai()};
+			dTable.addRow(ob);
+		}
+		
+		JScrollPane tablePanel = new JScrollPane();
+		tablePanel.setViewportView(table);
+		tablePanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+		centerPanel.add(tablePanel, BorderLayout.CENTER);
+		
+		JPanel findPanel = new JPanel();
+		findPanel.setLayout(new BoxLayout(findPanel, BoxLayout.X_AXIS));
+
+		JLabel findLabel1 = new JLabel(" Năm học: ");
+		findPanel.add(findLabel1);
+		JTextField findTextField1 = new JTextField();
+		findPanel.add(findTextField1);
+
+		JLabel findLabel2 = new JLabel(" Học kỳ: ");
+		findPanel.add(findLabel2);
+		JTextField findTextField2 = new JTextField();
+		findPanel.add(findTextField2);
+
+		JButton find = new JButton("Tìm kiếm");
+		find.setMaximumSize(new Dimension(125, 100));
+		findPanel.add(find);
+		findPanel.add(Box.createRigidArea(new Dimension(700, 0)));
+		centerPanel.add(findPanel, BorderLayout.NORTH);
+		find.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			int ret1 = Integer.parseInt(findTextField1.getText());
+	    			String ret2 = findTextField2.getText();
+	    			boolean flag = false;
+	    			for(int i = 0; i < table.getRowCount(); i++) {
+	    				if(ret1 == (int)table.getValueAt(i, 1) && ret2.equals(table.getValueAt(i, 2))) {
+	    					flag = true;
+	    					table.setRowSelectionInterval(i, i);
+	    					table.scrollRectToVisible(table.getCellRect(i, 0, true));
+	    				}
+	    			}
+	    			if(flag == false) {
+	    				statusCapNhat.setText("Không tìm thấy kết quả!");
+	    				showStatusCapNhat();
+	    			}
+	    		}
+	    	}
+	    });
+
+		statusCapNhat = new JLabel();
+		statusCapNhat.setVisible(false);
+		centerPanel.add(statusCapNhat, BorderLayout.SOUTH);
+		// WestPanel--------------------------------------------------
 		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
 		westPanel.setPreferredSize(new Dimension(150, 0));
 		westPanel.add(Box.createVerticalGlue());
-		JPanel floor = new JPanel();
-		floor.setLayout(new GridLayout(3,1));
+		JPanel wfloor = new JPanel();
+		wfloor.setLayout(new GridLayout(4,1));		
+		wfloor.add(home);		
 		
-		floor.add(home);
+		JButton them = new JButton("Thêm học kỳ");
+		them.setForeground(mainColor);
+		wfloor.add(them);
+		them.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			ThemHocKyFrame themHKF = new ThemHocKyFrame(session);
+	    			themHKF.getOk().addMouseListener(new MouseAdapter() {
+	    				@Override
+	    				public void mouseReleased(MouseEvent e) {
+	    					if(SwingUtilities.isLeftMouseButton(e)) {
+	    						HocKy temp = themHKF.getHocKy();
+	    						Object[] ob = {false, temp.getNamhoc(), temp.getMahocky(), temp.getNgaybatdau(), temp.getNgayketthuc(),temp.getTrangThai()};
+	    						dTable.addRow(ob);
+	    					}
+	    				}
+	    			});		
+	    		}
+	    	}
+	    });		
 		
-		westPanel.add(floor);						
+		JButton dathocky = new JButton("<html><center>Đặt học kỳ <br /> hiện tại </center></html>");
+		dathocky.setForeground(mainColor);
+		wfloor.add(dathocky);
+		dathocky.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			for(int j = 0; j < table.getRowCount(); j++) {	    				
+						dTable.setValueAt("Tắt", j, 5);
+					}
+	    			int r = table.getSelectedRow();
+	    			if(r > -1 && r < table.getRowCount()) {
+						if(hockyhientai != null) {
+							hockyhientai.setTrangthai(false);
+							session.update(hockyhientai);
+						}
+						session.getTransaction().begin();
+						HocKyPK id = new HocKyPK((int)dTable.getValueAt(r, 1), (String)dTable.getValueAt(r, 2));
+						hockyhientai = session.get(HocKy.class, id);
+						hockyhientai.setTrangthai(true);
+						session.saveOrUpdate(hockyhientai);
+						
+						session.getTransaction().commit();
+						dTable.setValueAt("Bật", r, 5);
+						statusCapNhat.setText("Đã đặt "+ hockyhientai.toString() +" làm học kỳ hiện tại");
+						showStatusCapNhat();
+	    			}
+	    		}	  
+	    	}
+	    });
 		
+		JButton xoa = new JButton("Xóa");
+		xoa.setForeground(mainColor);
+		wfloor.add(xoa);
+		xoa.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			for(int i = 0; i < table.getRowCount(); i++) {
+	    				if(dTable.getValueAt(i, 0).toString() == "true") {
+	    					session.getTransaction().begin();
+	    					HocKyPK id = new HocKyPK((int)dTable.getValueAt(i, 1), (String)dTable.getValueAt(i, 2));
+	    					HocKy temp = session.get(HocKy.class, id);
+	    					session.delete(temp);
+	    					session.getTransaction().commit();	    					
+	    					dTable.removeRow(i);
+	    					statusCapNhat.setText("Xóa thành công!");
+	    					showStatusCapNhat();
+	    					i--;
+	    				}
+	    			}
+	    		}
+	    	}
+	    });
+		
+		//------------------------------------------------------
+		westPanel.add(wfloor);		
 		westPanel.add(Box.createVerticalGlue());
 		westPanel.setVisible(false);
-		westPanel.setVisible(true);		
+		westPanel.setVisible(true);			
 		centerPanel.setVisible(false);
 		centerPanel.setVisible(true);
 	}

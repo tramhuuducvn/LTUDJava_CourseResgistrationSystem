@@ -4,6 +4,11 @@ import java.io.*;
 import java.util.*;
 import javax.persistence.*;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
+
 @Entity
 @Table(name = "HocKy")
 @IdClass(HocKyPK.class)
@@ -28,6 +33,23 @@ public class HocKy implements Serializable{
 	@OneToMany(targetEntity = DotDangKyHocPhan.class, mappedBy = "hocky")
 	private Set<DotDangKyHocPhan> DanhSachDDKHP;
 	
+	
+	public HocKy() {}
+	
+	public HocKy(int namhoc, String mahocky, String ngaybatdau, String ngayketthuc) {
+		this.namhoc = namhoc;
+		this.mahocky = mahocky;
+		try {
+			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			this.ngaybatdau = df.parse(ngaybatdau);
+			this.ngayketthuc= df.parse(ngayketthuc);
+		}
+		catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	public int getNamhoc() {
 		return namhoc;
 	}
@@ -38,6 +60,29 @@ public class HocKy implements Serializable{
 
 	public String getMahocky() {
 		return mahocky;
+	}
+
+	public boolean isTrangthai() {
+		return trangthai;
+	}
+	
+	public String getTrangThai() {
+		if(trangthai) {
+			return "Bật";
+		}
+		return "Tắt";
+	}
+
+	public void setTrangthai(boolean trangthai) {
+		this.trangthai = trangthai;
+	}
+
+	public Set<DotDangKyHocPhan> getDanhSachDDKHP() {
+		return DanhSachDDKHP;
+	}
+
+	public void setDanhSachDDKHP(Set<DotDangKyHocPhan> danhSachDDKHP) {
+		DanhSachDDKHP = danhSachDDKHP;
 	}
 
 	public void setMahocky(String mahocky) {

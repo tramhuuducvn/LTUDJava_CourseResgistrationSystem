@@ -6,6 +6,7 @@ public class DangKyPK implements Serializable{
 	private int mathongtin;
 	private String mssv;
 	
+	public DangKyPK() {}
 	public DangKyPK(int mathongtin, String mssv) {
 		this.mathongtin = mathongtin;
 		this.mssv = mssv;
