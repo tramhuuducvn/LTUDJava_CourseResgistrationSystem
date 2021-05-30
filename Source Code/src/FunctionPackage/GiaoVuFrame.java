@@ -7,12 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import javax.swing.plaf.*;
-import javax.swing.table.DefaultTableModel;
-
-import org.hibernate.query.*;
-
-import com.mysql.cj.xdevapi.Table;
-
+import javax.swing.table.*;
+import org.hibernate.query.Query;
 import org.hibernate.*;
 
 public class GiaoVuFrame extends JFrame{	
@@ -210,6 +206,15 @@ public class GiaoVuFrame extends JFrame{
 		centerPanel.setVisible(true);
 	}
 	private int demCapNhat = 0;
+	JLabel statusCapNhat;
+	public void showStatusCapNhat() {
+		statusCapNhat.setForeground(new Color(0, 255, 127));
+		if(demCapNhat%2 == 1) {
+			statusCapNhat.setForeground(new Color(255, 107, 107));
+		}
+		statusCapNhat.setVisible(true);
+		demCapNhat++;
+	}
 	public void thongtintaikhoanClickAction() {			
 			centerPanel.removeAll();
 			westPanel.removeAll();
@@ -231,7 +236,7 @@ public class GiaoVuFrame extends JFrame{
 			centerPanel.add(floor1);
 			centerPanel.add(Box.createVerticalGlue());
 			
-			JLabel statusCapNhat = new JLabel("Cập nhật thành công!");
+			statusCapNhat = new JLabel("Cập nhật thành công!");
 			statusCapNhat.setVisible(false);
 			JPanel cnp = new JPanel(); cnp.setLayout(new BoxLayout(cnp, BoxLayout.X_AXIS)); 
 			cnp.add(Box.createHorizontalGlue());
@@ -258,12 +263,7 @@ public class GiaoVuFrame extends JFrame{
 					gv.setHoten(hotenTextField.getText());
 					session.update("GiaoVu", gv);
 					session.getTransaction().commit();
-					statusCapNhat.setForeground(new Color(0, 255, 127));
-					if(demCapNhat%2 == 1) {
-						statusCapNhat.setForeground(new Color(255, 107, 107));
-					}
-					statusCapNhat.setVisible(true);
-					demCapNhat++;
+					showStatusCapNhat();
 				}
 			});
 			//--------------------------------------------------------
@@ -323,32 +323,37 @@ public class GiaoVuFrame extends JFrame{
 		// CenterPanel------------------------------------------------
 		centerPanel.setLayout(new BorderLayout(0, 3));
 		
-		String columns[] = {"Mã giáo vụ", "Họ tên", "Chọn"};
-		Object[][] data = {
-	            {"Buy", "IBM", false},
-	            {"Sell", "MicroSoft", true},
-	            {"Sell", "Apple", true},
-	            {"Buy", "Nortel", false}
-	        };
-		DefaultTableModel gvDTable = new DefaultTableModel(data, columns);
+		String columns[] = {"Chọn", "Tài khoản", "Mã giáo vụ", "Họ tên"};
+//		Object[][] data = {{false, "abc", "abc"}};
+		DefaultTableModel gvDTable = new DefaultTableModel(columns, 0);
 		JTable gvTable = new JTable(gvDTable) {
 			@Override
 			public Class getColumnClass(int column) {
 				switch(column) {
 					case 0:
-						return String.class;
+						return Boolean.class;
 					case 1: 
 						return String.class;
 					case 2:
-						return Boolean.class;
+						return String.class;
+					case 3: 
+						return String.class;
 					default:
 						return Object.class;
 				}
 			}
 		};
+//		gvTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(new JCheckBox()));
 		gvTable.setPreferredScrollableViewportSize(gvTable.getPreferredSize());
 		gvTable.setFillsViewportHeight(true);
-		gvTable.getColumnModel().getColumn(2).setMaxWidth(60);
+		gvTable.getColumnModel().getColumn(0).setMaxWidth(57);
+		gvTable.setRowHeight(37);
+		Query q1 = session.createQuery("FROM GiaoVu");
+		java.util.List<GiaoVu> giaovuList  = q1.list();
+		for(GiaoVu t : giaovuList) {
+			Object ob[] = {false, t.getTaikhoan(), t.getMagv(), t.getHoten()};
+			gvDTable.addRow(ob);
+		}
 		
 		JScrollPane tablePanel = new JScrollPane();
 		tablePanel.setViewportView(gvTable);
@@ -366,6 +371,24 @@ public class GiaoVuFrame extends JFrame{
 		findPanel.add(find);
 		findPanel.add(Box.createRigidArea(new Dimension(700, 0)));
 		centerPanel.add(findPanel, BorderLayout.NORTH);
+		find.addMouseListener(new MouseAdapter() {
+	    	@Override
+	    	public void mouseReleased(MouseEvent e) {
+	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			String ret = findTextField.getText();
+	    			for(int i = 0; i < gvTable.getRowCount(); i++) {
+	    				if(ret.equals(gvDTable.getValueAt(i, 1))) {
+	    					gvDTable.setValueAt(true, i, 0);
+	    					gvTable.setRowSelectionInterval(i, i);
+	    					gvTable.scrollRectToVisible(gvTable.getCellRect(i, 0, true));
+	    				}
+	    			}
+	    		}
+	    	}
+	    });
+		statusCapNhat = new JLabel("Cập nhật thành công!");
+		statusCapNhat.setVisible(false);
+		centerPanel.add(statusCapNhat, BorderLayout.SOUTH);
 		// WestPanel--------------------------------------------------
 		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
 		westPanel.setPreferredSize(new Dimension(150, 0));
@@ -380,7 +403,17 @@ public class GiaoVuFrame extends JFrame{
 	    	@Override
 	    	public void mouseReleased(MouseEvent e) {
 	    		if(SwingUtilities.isLeftMouseButton(e)) {
-	    			
+	    			ThemGiaoVuFrame themGVF = new ThemGiaoVuFrame(session);
+	    			themGVF.getOk().addMouseListener(new MouseAdapter() {
+	    				@Override
+	    				public void mouseReleased(MouseEvent e) {
+	    					if(SwingUtilities.isLeftMouseButton(e)) {
+	    						GiaoVu temp = themGVF.getGiaoVu();
+	    						Object[] ob = {false, temp.getTaikhoan(), temp.getMagv(), temp.getHoten()};
+	    						gvDTable.addRow(ob);
+	    					}
+	    				}
+	    			});		
 	    		}
 	    	}
 	    });
@@ -392,7 +425,17 @@ public class GiaoVuFrame extends JFrame{
 	    	@Override
 	    	public void mouseReleased(MouseEvent e) {
 	    		if(SwingUtilities.isLeftMouseButton(e)) {
-	    			
+	    			for(int i = 0; i < gvTable.getRowCount(); i++) {
+	    				if(gvDTable.getValueAt(i, 0).equals(true)) {
+		    					session.getTransaction().begin();
+		    					String idgv = (String)gvDTable.getValueAt(i, 2);
+		    					GiaoVu temp = session.get(GiaoVu.class, idgv);	    					
+		    					temp.setHoten((String)(gvDTable.getValueAt(i, 3)));
+		    					session.update(temp);
+		    					session.getTransaction().commit();		    					
+		    					showStatusCapNhat();
+	    				}
+	    			}
 	    		}
 	    	}
 	    });
@@ -403,7 +446,19 @@ public class GiaoVuFrame extends JFrame{
 	    	@Override
 	    	public void mouseReleased(MouseEvent e) {
 	    		if(SwingUtilities.isLeftMouseButton(e)) {
-	    			
+	    			for(int i = 0; i < gvTable.getRowCount(); i++) {
+	    				if(gvDTable.getValueAt(i, 0).equals(true)) {
+		    					session.getTransaction().begin();
+		    					String idgv = (String)gvDTable.getValueAt(i, 2);
+		    					GiaoVu temp = session.get(GiaoVu.class, idgv);	    					
+		    					temp.setHoten((String)(gvDTable.getValueAt(i, 3)));
+		    					session.delete(temp);
+		    					session.getTransaction().commit();		    					
+		    					gvDTable.removeRow(i);
+		    					statusCapNhat.setText("Xóa thành công!");
+		    					showStatusCapNhat();
+	    				}
+	    			}
 	    		}
 	    	}
 	    });

@@ -48,3 +48,7 @@ mật khẩu thành công
 15.png: 00h18 ngày 29/05/2021 #+5 điểm
 --> Tạo chức năng xem thông tin + chỉnh sửa + cập nhật thông tin cho 
 giáo vụ và sinh viên
+
+16.png: 23h57 ngày 29/05/2021
+--> Làm chức năng thêm giáo vụ và thêm sinh viên, học cách render các 
+component lên JTable
