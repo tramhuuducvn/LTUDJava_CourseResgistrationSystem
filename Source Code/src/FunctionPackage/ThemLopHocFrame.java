@@ -12,36 +12,32 @@ import javax.swing.table.DefaultTableModel;
 import org.hibernate.query.Query;
 import org.hibernate.*;
 
-public class ThemGiaoVuFrame extends JFrame {
-	private GiaoVu gv;
-	JButton ok;
-	JButton cancel;
-	public ThemGiaoVuFrame(Session session) {
-		
+public class ThemLopHocFrame extends JFrame{
+	private LopHoc lophoc;
+	private JButton ok;
+	private JButton cancel;
+	
+	public ThemLopHocFrame(Session session) {
 		JPanel floor = new JPanel();
 		floor.setLayout(new BoxLayout(floor, BoxLayout.Y_AXIS));
 		
 		JPanel floor1 = new JPanel();
 		floor1.setLayout(new BoxLayout(floor1, BoxLayout.X_AXIS));
-		JLabel magvLabel = new JLabel(" Mã giáo vụ :      ");
-		JTextField magvTextField = new JTextField();
-		floor1.add(magvLabel);
-		floor1.add(magvTextField);
-		floor1.setMaximumSize(new Dimension(2000, 37));
+		JLabel label1 = new JLabel(" Mã lớp hoc :      ");
+		JTextField textField = new JTextField();
+		floor1.add(label1);
+		floor1.add(textField);
+		floor1.setMaximumSize(new Dimension(500, 37));
+		floor1.add(Box.createHorizontalStrut(5));
 		floor.add(floor1);
-		
-		JPanel floor2 = new JPanel();
-		floor2.setLayout(new BoxLayout(floor2, BoxLayout.X_AXIS));
-		JLabel hotenLabel = new JLabel(" Họ tên giáo vụ :");
-		JTextField hotenTextField = new JTextField();
-		floor2.setMaximumSize(new Dimension(2000, 37));
-		floor2.add(hotenLabel);
-		floor2.add(hotenTextField);
-		floor.add(floor2);
 		floor.add(Box.createVerticalGlue());
 		
 		JPanel floor3 = new JPanel();
 		floor3.setLayout(new BoxLayout(floor3, BoxLayout.X_AXIS));
+		JLabel lb3 = new JLabel();
+		lb3.setForeground(new Color(207, 77, 47));
+		lb3.setVisible(false);
+		floor3.add(lb3);
 		floor3.add(Box.createHorizontalGlue());
 		
 		ok = new JButton("OK");
@@ -53,13 +49,27 @@ public class ThemGiaoVuFrame extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 				if(SwingUtilities.isLeftMouseButton(e)) {
 					try {
-						String magv = magvTextField.getText();
-						String hoten = hotenTextField.getText();
-						gv = new GiaoVu(magv, hoten);
-						session.getTransaction().begin();
-						session.save(gv);
-						session.getTransaction().commit();
-						dispose();
+						String malop = textField.getText();
+						if(!malop.isBlank()) {
+							lophoc = new LopHoc(malop);
+							LopHoc temp = session.get(LopHoc.class, malop);
+							if(temp != null) {
+								lb3.setText("Lớp học đã tồn tại!");
+								lb3.setVisible(true);
+							}
+							else {
+								session.getTransaction().begin();
+								session.save(lophoc);
+								session.getTransaction().commit();
+								dispose();
+							}
+						}
+						else {
+							lb3.setText("Mã lớp rỗng!");
+							lb3.setVisible(true);
+						}
+						
+						
 					}catch (HibernateException e1) {
 						System.out.println(e1.getMessage());
 					}
@@ -86,8 +96,8 @@ public class ThemGiaoVuFrame extends JFrame {
 		});
 		
 		add(floor);
-		setTitle("Thêm giáo vụ mới");
-		setSize(520, 225);
+		setTitle("Thêm lớp học mới");
+		setSize(520, 172);
 		setLocationRelativeTo(null);
 		addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent windowEvent) {
@@ -97,17 +107,43 @@ public class ThemGiaoVuFrame extends JFrame {
 		setVisible(true);
 	}
 	
-	public GiaoVu getGiaoVu() {
-		return this.gv;
-	}
 	
+	
+	public LopHoc getLophoc() {
+		return lophoc;
+	}
+
+
+
+	public void setLophoc(LopHoc lophoc) {
+		this.lophoc = lophoc;
+	}
+
+
+
 	public JButton getOk() {
 		return ok;
 	}
 
+
+
+	public void setOk(JButton ok) {
+		this.ok = ok;
+	}
+
+
+
 	public JButton getCancel() {
 		return cancel;
 	}
+
+
+
+	public void setCancel(JButton cancel) {
+		this.cancel = cancel;
+	}
+
+
 
 	public static void main(String[] args) {
 		try {
@@ -141,9 +177,8 @@ public class ThemGiaoVuFrame extends JFrame {
 			public void run() {
 				HibernateUtil hbn = new HibernateUtil("localhost", "3306", "CourseRegistrationSystem", "tramhuuduc", "19120484@Ubuntu");
 				Session session = hbn.getFACTORY().openSession();
-				ThemGiaoVuFrame a = new ThemGiaoVuFrame(session);
+				ThemLopHocFrame a = new ThemLopHocFrame(session);
 			}
 		});
-	}
-	
+	}	
 }

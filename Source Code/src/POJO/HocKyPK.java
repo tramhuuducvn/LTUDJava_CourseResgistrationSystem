@@ -28,4 +28,7 @@ public class HocKyPK implements Serializable{
 	public void setMahocky(String mahocky) {
 		this.mahocky = mahocky;
 	}
+	public String toString() {
+		return String.valueOf(this.namhoc) + "-" + this.mahocky;
+	}
 }

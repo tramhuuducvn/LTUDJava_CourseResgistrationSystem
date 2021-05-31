@@ -825,14 +825,356 @@ public class GiaoVuFrame extends JFrame{
 	public void quanlylophocClickAction(){
 		centerPanel.removeAll();
 		westPanel.removeAll();
+		statusCapNhat = new JLabel();
+		//---------------
+		centerPanel.setLayout(new BorderLayout(0, 3));
+		JPanel cfloor = new JPanel();
+		cfloor.setLayout(new BoxLayout(cfloor, BoxLayout.Y_AXIS));
+		centerPanel.add(cfloor);
+				
+		String columns[] = {"Chọn", "MSSV", "Họ tên", "Giới tính", "Lớp", "Email"};
+		DefaultTableModel dTable = new DefaultTableModel(columns, 0);
+		JTable table = new JTable(dTable) {
+			@Override
+			public Class getColumnClass(int column) {
+				switch(column) {
+					case 0:
+						return Boolean.class;
+					case 1: 
+						return String.class;
+					case 2:
+						return String.class;
+					case 3:
+						return String.class;
+					case 4:
+						return LopHoc.class;
+					case 5:
+						return String.class;
+					default:
+						return Object.class;
+				}
+			}
+		};
+		table.setPreferredScrollableViewportSize(table.getPreferredSize());
+		table.setFillsViewportHeight(true);
+		table.getColumnModel().getColumn(0).setMaxWidth(57);
+		table.getColumnModel().getColumn(1).setMaxWidth(150);
+		table.getColumnModel().getColumn(1).setMinWidth(150);
+		table.getColumnModel().getColumn(2).setMaxWidth(500);
+		table.getColumnModel().getColumn(2).setMinWidth(300);
+		table.getColumnModel().getColumn(3).setMaxWidth(110);
+		table.getColumnModel().getColumn(3).setMinWidth(110);
+		table.getColumnModel().getColumn(4).setMaxWidth(150);
+		table.getColumnModel().getColumn(4).setMinWidth(150);
+		table.setRowHeight(37);
+//		JTableUtil.setCellsAlignment(table, SwingConstants.LEFT, 1);		
+		JPanel cfloor1 = new JPanel();
+		cfloor1.setLayout(new BoxLayout(cfloor1, BoxLayout.X_AXIS));
+		cfloor1.setMaximumSize(new Dimension(2000, 37));
+		cfloor1.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+		cfloor.add(cfloor1);
+		JLabel lophocLabel = new JLabel("Danh sách lớp: ");
+		cfloor1.add(lophocLabel);
 		
+		JComboBox<LopHoc> lophoccb = new JComboBox<LopHoc>();
+		java.util.Vector<LopHoc> lophocdata = new Vector<LopHoc>(); 
+		lophoccb.setMaximumSize(new Dimension(200, 37));
+		try {
+			java.util.List<LopHoc> lophocList;
+			Query q1 = session.createQuery("FROM LopHoc");
+			lophocList = q1.list();
+			for(LopHoc c : lophocList) {
+				lophocdata.add(c);
+				lophoccb.addItem(c);
+			}
+		} catch (HibernateException e) {System.out.println(e.getMessage());}
+		cfloor1.add(lophoccb);
+		cfloor.add(cfloor1);
+		cfloor.add(Box.createVerticalStrut(10));
+		JButton xemdssv = new JButton("Xem danh sách sinh viên");
+		xemdssv.setMaximumSize(new Dimension(250, 37));
+		cfloor1.add(xemdssv);
+		
+		JLabel thongtinlop = new JLabel("[Lớp:       , sỉ số:         , sỉ số nam:         , sỉ số nữ:       ]");
+		thongtinlop.setForeground(new Color(64,177,191));
+//		Vector<JComboBox> gioitinhcmblist = new Vector<JComboBox>();
+//		Vector<JComboBox> lopcmblist = new Vector<JComboBox>();
+//		java.util.Vector<String> gioitinhdata = new Vector<String>();
+//		gioitinhdata.add("Nam");
+//		gioitinhdata.add("Nữ");
+		xemdssv.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+//					gioitinhcmblist.clear();;
+//					lopcmblist.clear();
+					for(int i = table.getRowCount() - 1; i >= 0; i--) {
+						dTable.removeRow(i);
+					}
+					session.getTransaction().begin();
+					
+					String msl = lophoccb.getSelectedItem().toString();
+					LopHoc l = session.get(LopHoc.class, msl);
+					session.refresh(l);
+					Set<SinhVien> svlist = l.getDanhSachSinhVien();
+					int ss = 0;
+					session.getTransaction().commit();
+					if(svlist != null) {
+						ss = svlist.size();
+					}
+					int ssnam = 0, ssnu = 0;
+					if(ss > 0) {
+						for(int i = table.getRowCount() - 1; i >= 0; i--) {
+							dTable.removeRow(i);
+						}		
+						
+						for(SinhVien st : svlist) {
+	//						{"Chọn", "MSSV", "Họ tên", "Giới tính", "Lớp", "Email"};
+//							JComboBox<String> cmb1 = new JComboBox<String>(gioitinhdata);
+//							JComboBox<LopHoc> cmb2 = new JComboBox<LopHoc>(lophocdata);
+//							gioitinhcmblist.add(cmb1);
+//							lopcmblist.add(cmb2);
+//							table.getColumnModel().getColumn(3).setCellEditor(new DefaultCellEditor(cmb1));
+//							table.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(cmb2));
+							Object ob[] = {false, st.getMssv(), st.getHoten(), st.getGioitinh(), st.getLop(), st.getEmail()};
+							dTable.addRow(ob);
+							
+							if(st.getGioitinh().equals("Nam")) ssnam++;
+							if(st.getGioitinh().equals("Nữ")) ssnu ++;						
+						}
+						thongtinlop.setText("[Lớp: "+ msl + "___sỉ số: " + ss + "___sỉ số nam: " + ssnam + "___sỉ số nữ: " + ssnu + "]  ");
+					}
+					else {
+						thongtinlop.setText("[Lớp: "+ msl + "___sỉ số: " + ss + "___sỉ số nam: " + ssnam + "___sỉ số nữ: " + ssnu + "]  ");
+					}
+				}
+			}
+		});
+		cfloor1.add(Box.createHorizontalGlue());
+				
+		JPanel cfloor2 = new JPanel();
+		cfloor2.setLayout(new BoxLayout(cfloor2, BoxLayout.X_AXIS));
+		cfloor2.setMaximumSize(new Dimension(2000, 37));
+		JLabel findLabel = new JLabel(" Nhập MSSV: ");
+		cfloor2.add(findLabel);
+		JTextField findTextField = new JTextField();
+		cfloor2.add(findTextField);
+		JButton find = new JButton("Tìm kiếm");
+		find.setMaximumSize(new Dimension(125, 37));
+		cfloor2.add(find);
+		find.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					boolean flag = false;
+					for(int i = 0; i < table.getRowCount(); ++i) {
+						if(dTable.getValueAt(i, 1).equals(findTextField.getText())) {
+							flag = true;
+							table.setRowSelectionInterval(i, i);
+							table.scrollRectToVisible(table.getCellRect(i, 0, true));
+						}
+					}
+					if(!flag) {
+						statusCapNhat.setText("Không tìm thấy sinh viên này!");
+						showStatusCapNhat();
+					}
+				}
+			}
+		});
+		
+		cfloor2.add(Box.createHorizontalStrut(100));
+		cfloor2.add(thongtinlop);
+		cfloor2.add(Box.createHorizontalGlue());
+		JButton xoalophoc = new JButton("Xóa lớp học này");
+		xoalophoc.setMaximumSize(new Dimension(200, 37));
+		cfloor2.add(Box.createHorizontalStrut(100));
+		cfloor2.add(xoalophoc);
+		xoalophoc.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					session.getTransaction().begin();
+					LopHoc tudo = session.get(LopHoc.class, "100TuDo");
+					LopHoc temp = (LopHoc)lophoccb.getSelectedItem();
+					Set<SinhVien> svlisttemp = temp.getDanhSachSinhVien();
+					if(svlisttemp != null) {
+						for(SinhVien sv : svlisttemp) {
+							sv.setLop(tudo);
+							session.update(sv);
+						}
+					}
+					session.delete(temp);
+					session.getTransaction().commit();
+//					System.out.println(temp.toString());
+					for(int i = table.getRowCount() - 1; i >= 0; i--) {
+						dTable.removeRow(i);
+					}
+					statusCapNhat.setText("Lớp " + temp.toString() + " vừa bị xóa!");
+					showStatusCapNhat();
+					lophoccb.removeItem(temp);					
+				}
+			}
+		});
+		
+		cfloor.add(cfloor2);
+		
+		JScrollPane tablePane = new JScrollPane(table);
+		cfloor.add(tablePane);
+		cfloor.add(statusCapNhat);
+		//------------------------------------------------------------
 		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
 		westPanel.setPreferredSize(new Dimension(150, 0));
 		westPanel.add(Box.createVerticalGlue());
 		JPanel floor = new JPanel();
-		floor.setLayout(new GridLayout(3,1));
-		
+		floor.setLayout(new GridLayout(7,1));		
 		floor.add(home);
+		
+		JButton themlophoc = new JButton("Thêm lớp học");
+		themlophoc.setForeground(mainColor);
+		floor.add(themlophoc);
+		themlophoc.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					ThemLopHocFrame themlophocFrame = new ThemLopHocFrame(session);
+					themlophocFrame.getOk().addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							if(SwingUtilities.isLeftMouseButton(e)) {
+								LopHoc temp = themlophocFrame.getLophoc();
+								lophoccb.addItem(temp);
+							}
+						}
+					});					
+				}
+			}
+		});
+		
+		JButton xemmonhocsvdk = new JButton("<html><center> Xem học phần <br /> đăng ký </center></html>");
+		xemmonhocsvdk.setForeground(mainColor);
+		floor.add(xemmonhocsvdk);
+		xemmonhocsvdk.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					for(int i = 0; i < table.getRowCount(); ++i) {
+						if(dTable.getValueAt(i, 0).equals(true)) {
+							String ms = dTable.getValueAt(i, 1).toString();
+							SinhVien temp = session.get(SinhVien.class, ms);
+//							HocKyPK hkt = new HocKyPK(hockyhientai.getNamhoc(), hockyhientai.getMahocky());
+							new DanhSachMonDangKyFrame(temp, hockyhientai);
+						}
+					}
+				}
+			}
+		});
+		
+		JButton themsinhvien = new JButton("<html><center> Thêm sinh viên <br /> vào lớp </center></html>");
+		themsinhvien.setForeground(mainColor);
+		floor.add(themsinhvien);
+		themsinhvien.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					LopHoc lop = (LopHoc)lophoccb.getSelectedItem();
+					ThemSinhVienFrame themSVF = new ThemSinhVienFrame(session, lop);					
+					themSVF.getOk().addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							if(SwingUtilities.isLeftMouseButton(e)) {
+								SinhVien sinhvienmoi = themSVF.getSinhVien();
+								if(sinhvienmoi.getLop().equals(lop)) {
+									Object ob[] = {false, sinhvienmoi.getMssv(), sinhvienmoi.getHoten(), sinhvienmoi.getGioitinh(), sinhvienmoi.getLop(), sinhvienmoi.getEmail()};
+									dTable.addRow(ob);
+								}
+							}
+						}
+					});
+				}
+			}
+		});
+		
+		JButton capnhatthongtinsv = new JButton("<html><center> Cập nhật <br /> thông tin SV </center></html>");
+		capnhatthongtinsv.setForeground(mainColor);
+		floor.add(capnhatthongtinsv);
+		capnhatthongtinsv.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					for(int i = 0; i < table.getRowCount(); ++i) {
+						if(dTable.getValueAt(i, 0).toString() == "true") {
+							session.getTransaction().begin();
+							
+							String ms = dTable.getValueAt(i, 1).toString();
+							SinhVien temp = session.get(SinhVien.class, ms);
+							LopHoc loptemp = session.get(LopHoc.class, dTable.getValueAt(i, 4).toString());
+							
+							
+							temp.setHoten((String)dTable.getValueAt(i, 2));
+							temp.setGioitinh((String)dTable.getValueAt(i, 3));
+							temp.setLop(loptemp);
+							
+							System.out.println((String)dTable.getValueAt(i, 2));
+							System.out.println(dTable.getValueAt(i, 2));
+//							loptemp.getDanhSachSinhVien().add(temp);
+							
+//							session.update(loptemp);
+							session.update(temp);
+							session.getTransaction().commit();
+							statusCapNhat.setText("Cập nhật thành công!");
+	    					showStatusCapNhat();
+						}
+					}
+				}
+			}
+		});
+		
+		JButton datlaimatkhau = new JButton("<html><center> Reset mật khẩu <br /> sinh viên </center></html>");
+		datlaimatkhau.setForeground(mainColor);
+		floor.add(datlaimatkhau);
+		datlaimatkhau.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					for(int i = 0; i < table.getRowCount(); ++i) {
+						if(dTable.getValueAt(i, 0).toString() == "true") {
+							session.getTransaction().begin();
+							SinhVien temp = session.get(SinhVien.class, dTable.getValueAt(i, 1).toString());
+							temp.setMatkhau(dTable.getValueAt(i, 1).toString());
+							session.save(temp);
+							session.getTransaction().commit();
+						}
+					}
+				}
+			}
+		});
+		
+		JButton xoasinhvien = new JButton("<html><center> Xóa sinh viên <br /> ra khỏi lớp </center></html>");
+		xoasinhvien.setForeground(mainColor);
+		floor.add(xoasinhvien);
+		xoasinhvien.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {						
+					for(int i = 0; i < table.getRowCount(); ++i) {
+						if(dTable.getValueAt(i, 0).toString() == "true") {
+							session.getTransaction().begin();
+							String ms = dTable.getValueAt(i, 1).toString();
+							SinhVien temp = session.get(SinhVien.class, ms);
+							Query qx = session.createQuery("DELETE FROM DangKy WHERE mssv =: ms");
+							qx.setParameter("ms", ms);
+							session.delete(temp);
+							session.getTransaction().commit();
+							
+							dTable.removeRow(i);
+							i--;
+							statusCapNhat.setText("Đã xóa các sinh viên được chọn ra khỏi lớp!");
+							showStatusCapNhat();
+						}
+					}					
+				}
+			}
+		});
 		
 		westPanel.add(floor);			
 		

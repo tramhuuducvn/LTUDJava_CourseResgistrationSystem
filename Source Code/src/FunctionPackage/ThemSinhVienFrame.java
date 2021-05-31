@@ -14,7 +14,7 @@ public class ThemSinhVienFrame extends JFrame {
 	private SinhVien sv;
 	JButton ok;
 	JButton cancel;
-	public ThemSinhVienFrame(Session session) {
+	public ThemSinhVienFrame(Session session, LopHoc lop) {
 		
 		JPanel floor = new JPanel();
 		floor.setLayout(new BoxLayout(floor, BoxLayout.Y_AXIS));
@@ -60,12 +60,17 @@ public class ThemSinhVienFrame extends JFrame {
 				lophoccb.addItem(c);
 			}
 		} catch (HibernateException e) {System.out.println(e.getMessage());}
+		lophoccb.setSelectedItem(lop);
 		floor4.add(lophoccb);
 		floor.add(floor4);
 		
 		floor.add(Box.createVerticalGlue());
 		JPanel floor5 = new JPanel();
 		floor5.setLayout(new BoxLayout(floor5, BoxLayout.X_AXIS));
+		JLabel statusLabel = new JLabel("Mã sinh viên đã tồn tại!");
+		statusLabel.setVisible(false);
+		statusLabel.setForeground(new Color(189, 61, 58));
+		floor5.add(statusLabel);
 		floor5.add(Box.createHorizontalGlue());
 
 		ok = new JButton("OK");
@@ -77,15 +82,21 @@ public class ThemSinhVienFrame extends JFrame {
 			public void mouseReleased(MouseEvent e) {
 				if(SwingUtilities.isLeftMouseButton(e)) {
 					try {
-						String magv = mssvTextField.getText();
+						String msv = mssvTextField.getText();
 						String hoten = hotenTextField.getText();
 						String gioitinh = (String)gioitinhCmb.getSelectedItem();
 						LopHoc lop = (LopHoc)lophoccb.getSelectedItem();
-						sv = new SinhVien(magv, hoten, gioitinh, lop);
-						session.getTransaction().begin();
-						session.save(sv);
-						session.getTransaction().commit();
-						dispose();
+						SinhVien temp = session.get(SinhVien.class, msv);
+						if(temp == null) {
+							sv = new SinhVien(msv, hoten, gioitinh, lop);
+							session.getTransaction().begin();
+							session.save(sv);
+							session.getTransaction().commit();
+							dispose();
+						}
+						else {
+							statusLabel.setVisible(true);
+						}
 					}catch (HibernateException e1) {
 						System.out.println(e1.getMessage());
 					}
@@ -112,7 +123,7 @@ public class ThemSinhVienFrame extends JFrame {
 		});
 		
 		add(floor);
-		setTitle("Change Password");
+		setTitle("Thêm sinh viên mới");
 		setSize(520, 225);
 		setLocationRelativeTo(null);
 		addWindowListener(new WindowAdapter() {
@@ -168,7 +179,8 @@ public class ThemSinhVienFrame extends JFrame {
 				try {
 					HibernateUtil hbn = new HibernateUtil("localhost", "3306", "CourseRegistrationSystem", "tramhuuduc", "19120484@Ubuntu");
 					Session session = hbn.getFACTORY().openSession();
-					ThemSinhVienFrame a = new ThemSinhVienFrame(session);
+					LopHoc lop = session.get(LopHoc.class, "19CTT3");
+					ThemSinhVienFrame a = new ThemSinhVienFrame(session, lop);
 				}catch(HibernateException e) {
 					System.out.println(e.getMessage());
 				}

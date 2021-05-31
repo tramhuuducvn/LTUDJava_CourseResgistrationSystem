@@ -97,7 +97,7 @@ public class ThemMonHocFrame extends JFrame {
 		});
 		
 		add(floor);
-		setTitle("Change Password");
+		setTitle("Thêm môn học");
 		setSize(520, 225);
 		setLocationRelativeTo(null);
 		addWindowListener(new WindowAdapter() {

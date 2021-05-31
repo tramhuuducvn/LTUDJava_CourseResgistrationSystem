@@ -15,8 +15,6 @@
 		- thêm, 
 		- xóa, 
 		- cập nhật thông tin một giáo vụ ra khỏi hệ thống.
-		--- quy ước: giáo vụ sẽ không được sử dụng chức năng này đối với 
-		   tài khoản của chính mình
 
 	- Quản lý môn học: (5 điểm) (tương đương chức năng 3)
 		- xem danh sách, 
@@ -27,12 +25,18 @@
 
 	- Quản lý học kỳ: (5 điểm) (tương đương chức năng 4)
 		- xem danh sách, 
-		- thêm học kỳ mới, 
+		- thêm, xóa học kỳ mới, 
 		- đặt 1 học kỳ làm học kỳ hiện tại,
 
 	- Quản lý lớp học: (20 điểm) (tương đương chức năng 5, 6)
 		xem danh sách,
-		thêm, xóa một lớp học
+		
+		thêm, xóa một lớp học (em tự quy ước là sẽ có một lớp tự 
+		do có mã lớp là 100TuDo và sẽ ko được xóa lớp này đi.
+		khi xóa các lớp khác thì các sinh viên lớp đó sẽ được 
+		xếp vào lớp tự do này, tuy không thể xóa đi lớp tự do 
+		nhưng có thể xóa tất cả các sinh viên của lớp này).
+
 		xem danh sách sinh viên trong một lớp học
 		tìm kiếm sinh viên trong một lớp học
 		xem các môn học mà sinh viên đăng ký

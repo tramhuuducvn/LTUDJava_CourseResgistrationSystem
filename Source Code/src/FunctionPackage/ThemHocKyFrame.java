@@ -110,7 +110,7 @@ public class ThemHocKyFrame extends JFrame{
 		});
 		
 		add(floor);
-		setTitle("Change Password");
+		setTitle("Thêm học kỳ mới");
 		setSize(520, 225);
 		setLocationRelativeTo(null);
 		addWindowListener(new WindowAdapter() {
