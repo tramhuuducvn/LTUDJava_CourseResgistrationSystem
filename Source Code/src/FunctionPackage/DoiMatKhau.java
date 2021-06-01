@@ -102,26 +102,26 @@ public class DoiMatKhau extends JFrame{
 		return status;
 	}
 	
-	public static void main(String[] args) {
-		DoiMatKhau a = new DoiMatKhau();
-		
-		a.getOK().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
-					System.out.println(a.getMatKhauMoi());
-				}
-			}
-		});
-		
-		a.getCancel().addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
-					a.dispose();
-				}
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		DoiMatKhau a = new DoiMatKhau();
+//		
+//		a.getOK().addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseReleased(MouseEvent e) {
+//				if(SwingUtilities.isLeftMouseButton(e)) {
+//					System.out.println(a.getMatKhauMoi());
+//				}
+//			}
+//		});
+//		
+//		a.getCancel().addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseReleased(MouseEvent e) {
+//				if(SwingUtilities.isLeftMouseButton(e)) {
+//					a.dispose();
+//				}
+//			}
+//		});
+//	}
 				
 }

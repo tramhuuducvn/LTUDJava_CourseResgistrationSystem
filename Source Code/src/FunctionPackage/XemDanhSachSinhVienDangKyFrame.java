@@ -122,44 +122,44 @@ public class XemDanhSachSinhVienDangKyFrame extends JFrame{
 		setVisible(true);
 	}
 	
-	public static void main(String[] args) {
-		try {
-	        for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-	            if ("GTK+".equals(info.getName())) {
-	                UIManager.setLookAndFeel(info.getClassName());
-	                break;
-	            }
-	        }
-	        Enumeration keys = UIManager.getDefaults().keys();
-	        while (keys.hasMoreElements()) {
-	            Object key = keys.nextElement();
-	            Object value = UIManager.get(key);
-	            if (value instanceof FontUIResource) {
-	                FontUIResource orig = (FontUIResource) value;
-	                Font font = new Font("TimeNewRoman" , Font.PLAIN, 17);
-	                UIManager.put(key, new FontUIResource(font));
-	            }
-	        }            
-	    } catch (ClassNotFoundException ex) {
-	        java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	    } catch (java.lang.InstantiationException ex) {
-	        java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	    } catch (IllegalAccessException ex) {
-	        java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-	        java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-	    }
-		
-		EventQueue.invokeLater(new Runnable() {
-			@Override
-			public void run() {
-				HibernateUtil hbn = new HibernateUtil("localhost", "3306", "CourseRegistrationSystem", "tramhuuduc", "19120484@Ubuntu");
-				Session session = hbn.getFACTORY().openSession();
-//				HocKyPK hkpk = new HocKyPK(2020, "HK1");
-//				HocKy hkht = session.get(HocKy.class, hkpk);
-				LichHoc lichhoc = session.get(LichHoc.class, 1);
-				XemDanhSachSinhVienDangKyFrame main = new XemDanhSachSinhVienDangKyFrame(lichhoc);
-			}
-		});
-	}
+//	public static void main(String[] args) {
+//		try {
+//	        for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+//	            if ("GTK+".equals(info.getName())) {
+//	                UIManager.setLookAndFeel(info.getClassName());
+//	                break;
+//	            }
+//	        }
+//	        Enumeration keys = UIManager.getDefaults().keys();
+//	        while (keys.hasMoreElements()) {
+//	            Object key = keys.nextElement();
+//	            Object value = UIManager.get(key);
+//	            if (value instanceof FontUIResource) {
+//	                FontUIResource orig = (FontUIResource) value;
+//	                Font font = new Font("TimeNewRoman" , Font.PLAIN, 17);
+//	                UIManager.put(key, new FontUIResource(font));
+//	            }
+//	        }            
+//	    } catch (ClassNotFoundException ex) {
+//	        java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//	    } catch (java.lang.InstantiationException ex) {
+//	        java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//	    } catch (IllegalAccessException ex) {
+//	        java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//	    } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//	        java.util.logging.Logger.getLogger(JFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//	    }
+//		
+//		EventQueue.invokeLater(new Runnable() {
+//			@Override
+//			public void run() {
+//				HibernateUtil hbn = new HibernateUtil("localhost", "3306", "CourseRegistrationSystem", "tramhuuduc", "19120484@Ubuntu");
+//				Session session = hbn.getFACTORY().openSession();
+////				HocKyPK hkpk = new HocKyPK(2020, "HK1");
+////				HocKy hkht = session.get(HocKy.class, hkpk);
+//				LichHoc lichhoc = session.get(LichHoc.class, 1);
+//				XemDanhSachSinhVienDangKyFrame main = new XemDanhSachSinhVienDangKyFrame(lichhoc);
+//			}
+//		});
+//	}
 }
