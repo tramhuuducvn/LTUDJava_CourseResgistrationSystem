@@ -79,10 +79,10 @@ create table LichHoc (
 );
 
 create table DotDangKyHocPhan(
-  madot int primary key,
+  madot int primary key, -- mỗi đợt đăng ký học phần sẽ có một mã riếng để phân biệt với tất cả các đợt đăng ký học phần khác
   namhoc int,
   hocky char(3),
-  STT int,
+  STT int, -- thứ tự các đợt đăng ký học phần trong 1 học kỳ
   ngaybatdaudangky date,
   ngayketthucdangky date
 );
@@ -216,9 +216,10 @@ update LopHoc
 set sisonu = 0
 where sisonu is null;
 
-
-
-
+insert into DotDangKyHocPhan(madot, namhoc, hocky, STT, ngaybatdaudangky, ngayketthucdangky) values
+(1, 2020, 'HK1', 1, '2019-12-15', '2019-12-20'),
+(2, 2020, 'HK1', 2, '2019-12-25', '2020-01-01'),
+(3, 2020, 'HK1', 3, '2020-01-07', '2019-01-10');
 
 
 

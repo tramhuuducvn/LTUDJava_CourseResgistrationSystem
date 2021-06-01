@@ -1,7 +1,6 @@
 package FunctionPackage;
 
 import POJO.*;
-
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
@@ -12,10 +11,10 @@ import javax.swing.table.DefaultTableModel;
 import org.hibernate.query.Query;
 import org.hibernate.*;
 
-public class DanhSachMonDangKyFrame extends JFrame{
+public class XemDanhSachSinhVienDangKyFrame extends JFrame{
 	final Color borderColor = new Color(200, 126, 74);
-	public DanhSachMonDangKyFrame(SinhVien sv, HocKy cur) {
-		Set<LichHoc> ds = sv.getDanhSachLichHoc();
+	public XemDanhSachSinhVienDangKyFrame(LichHoc lichhoc) {
+		Set<SinhVien> ds = lichhoc.getDanhSachSinhVien();
 		setLayout(new BorderLayout(3, 3));
 		
 //		JPanel northPanel = new JPanel();
@@ -26,30 +25,22 @@ public class DanhSachMonDangKyFrame extends JFrame{
 		centerPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
 		centerPanel.setLayout(new GridLayout(1,1));
 		
-		String columns[] = {"Mã", "Mã môn học", "Tên môn học", "Số tín chỉ", "Giáo viên", "Phòng học", "Thứ", "Ca học", "Slots"};
+		String columns[] = {"MSSV", "Họ tên", "Giới tính", "Lớp", "Email"};
 		DefaultTableModel dTable = new DefaultTableModel(columns, 0);
 		JTable table = new JTable(dTable) {
 			@Override
 			public Class getColumnClass(int column) {
 				switch(column) {
 					case 0:
-						return Integer.class;
+						return String.class;
 					case 1: 
 						return String.class;
 					case 2:
 						return String.class;
 					case 3:
-						return Integer.class;
+						return LopHoc.class;
 					case 4:
 						return String.class;
-					case 5:
-						return String.class;
-					case 6:
-						return Integer.class;
-					case 7:
-						return Integer.class;
-					case 8:
-						return Integer.class;
 					default:
 						return Object.class;
 				}
@@ -58,41 +49,30 @@ public class DanhSachMonDangKyFrame extends JFrame{
 		table.setPreferredScrollableViewportSize(table.getPreferredSize());
 		table.setFillsViewportHeight(true);
 		
-		table.getColumnModel().getColumn(0).setMinWidth(50);
-		table.getColumnModel().getColumn(0).setMaxWidth(50);
-		table.getColumnModel().getColumn(1).setMinWidth(120);
-		table.getColumnModel().getColumn(1).setMaxWidth(120);
-		table.getColumnModel().getColumn(3).setMinWidth(100);
-		table.getColumnModel().getColumn(3).setMaxWidth(100);
-		table.getColumnModel().getColumn(5).setMinWidth(100);
-		table.getColumnModel().getColumn(5).setMaxWidth(100);
-		table.getColumnModel().getColumn(6).setMinWidth(50);
-		table.getColumnModel().getColumn(6).setMaxWidth(50);
-		table.getColumnModel().getColumn(7).setMinWidth(70);
-		table.getColumnModel().getColumn(7).setMaxWidth(70);
-		table.getColumnModel().getColumn(8).setMinWidth(50);
-		table.getColumnModel().getColumn(8).setMaxWidth(50);
-		
-		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 0);
+		table.getColumnModel().getColumn(0).setMinWidth(150);
+		table.getColumnModel().getColumn(0).setMaxWidth(150);
+		table.getColumnModel().getColumn(1).setMinWidth(270);
+		table.getColumnModel().getColumn(1).setMaxWidth(270);
+		table.getColumnModel().getColumn(2).setMinWidth(90);
+		table.getColumnModel().getColumn(2).setMaxWidth(90);
+		table.getColumnModel().getColumn(3).setMinWidth(120);
+		table.getColumnModel().getColumn(3).setMaxWidth(120);
+
+		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 2);
 		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 3);
-		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 5);
-		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 6);
-		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 7);
-		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 8);
 		table.setRowHeight(37);		
 		JScrollPane tablePane = new JScrollPane(table);
 		centerPanel.add(tablePane);
-		
-		for(LichHoc l : ds) {
-			if(cur.equals(l.getHocky())) {
-//			String columns[] = {"Mã", "Mã môn học", "Tên môn học", "Số tín chỉ","Giáo viên", "Phòng học", "Ca học", "Slots"};
-				Object ob[] = {l.getMathongtin(), l.getMonhoc().getMamonhoc(), l.getMonhoc().getTenmonhoc(), l.getMonhoc().getSotinchi(), l.getGiaovien(), l.getPhonghoc(), l.getNgaythu(),l.getCahoc(), l.getSlots()};
+		if(ds != null || ds.isEmpty() == false) {
+			for(SinhVien sv : ds) {
+	//			{"MSSV", "Họ tên", "Giới tính", "Lớp", "Email"};
+				Object ob[] = {sv.getMssv(), sv.getHoten(), sv.getGioitinh(), sv.getLop(), sv.getEmail()};
 				dTable.addRow(ob);
 			}
 		}
 		
 		
-		setTitle("Danh sách môn học sinh viên " + sv.getMssv() + "-" + sv.getHoten() + " đã đăng ký trong " + cur.toString());
+		setTitle("Danh sách sinh viên đăng ký học phần mã " + lichhoc.getMathongtin() + "___Môn: " + lichhoc.getMonhoc().getTenmonhoc());
 		setSize(970, 670);
 		setLocationRelativeTo(null);
 		addWindowListener(new WindowAdapter() {
@@ -136,10 +116,10 @@ public class DanhSachMonDangKyFrame extends JFrame{
 			public void run() {
 				HibernateUtil hbn = new HibernateUtil("localhost", "3306", "CourseRegistrationSystem", "tramhuuduc", "19120484@Ubuntu");
 				Session session = hbn.getFACTORY().openSession();
-				HocKyPK hkpk = new HocKyPK(2020, "HK1");
-				HocKy hkht = session.get(HocKy.class, hkpk);
-				SinhVien me = session.get(SinhVien.class, "19120477");
-				DanhSachMonDangKyFrame main = new DanhSachMonDangKyFrame(me, hkht);
+//				HocKyPK hkpk = new HocKyPK(2020, "HK1");
+//				HocKy hkht = session.get(HocKy.class, hkpk);
+				LichHoc lichhoc = session.get(LichHoc.class, 1);
+				XemDanhSachSinhVienDangKyFrame main = new XemDanhSachSinhVienDangKyFrame(lichhoc);
 			}
 		});
 	}

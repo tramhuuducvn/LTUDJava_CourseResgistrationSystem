@@ -491,7 +491,7 @@ public class GiaoVuFrame extends JFrame{
 		String columns[] = {"Chọn", "Mã môn học", "Tên môn học", "Số tín chỉ"};
 		DefaultTableModel mhDTable = new DefaultTableModel(columns, 0);
 		JTable mhTable = new JTable(mhDTable) {
-			@Override
+			@Override			
 			public Class getColumnClass(int column) {
 				switch(column) {
 					case 0:
@@ -1188,17 +1188,247 @@ public class GiaoVuFrame extends JFrame{
 	public void quanlydangkyhocphanClickAction(){
 		centerPanel.removeAll();
 		westPanel.removeAll();
+		statusCapNhat = new JLabel();
+		statusCapNhat.setVisible(false);
+		//-------------------------------------------------------------------
+		centerPanel.setLayout(new BorderLayout(0, 3));
+		JPanel cfloor = new JPanel();
+		cfloor.setLayout(new BoxLayout(cfloor, BoxLayout.Y_AXIS));
+		centerPanel.add(cfloor);		
 		
+		String columns[] = {"Chọn", "Mã", "Mã môn học", "Tên môn học", "Số tín chỉ", "Giáo viên", "Phòng học", "Thứ", "Ca học", "Slots"};
+		DefaultTableModel dTable = new DefaultTableModel(columns, 0);
+		JTable table = new JTable(dTable) {
+			@Override
+			public Class getColumnClass(int column) {
+				switch(column) {
+					case 0: 
+						return Boolean.class;
+					case 1:
+						return Integer.class;
+					case 2: 
+						return String.class;
+					case 3:
+						return String.class;
+					case 4:
+						return Integer.class;
+					case 5:
+						return String.class;
+					case 6:
+						return String.class;
+					case 7:
+						return Integer.class;
+					case 8:
+						return Integer.class;
+					case 9:
+						return Integer.class;
+					default:
+						return Object.class;
+				}
+			}
+		};
+		table.setPreferredScrollableViewportSize(table.getPreferredSize());
+		table.setFillsViewportHeight(true);
+		
+		table.getColumnModel().getColumn(0).setMinWidth(57);
+		table.getColumnModel().getColumn(0).setMaxWidth(57);
+		table.getColumnModel().getColumn(1).setMinWidth(50);
+		table.getColumnModel().getColumn(1).setMaxWidth(50);
+		table.getColumnModel().getColumn(2).setMinWidth(120);
+		table.getColumnModel().getColumn(2).setMaxWidth(120);
+		table.getColumnModel().getColumn(4).setMinWidth(100);
+		table.getColumnModel().getColumn(4).setMaxWidth(100);
+		table.getColumnModel().getColumn(6).setMinWidth(100);
+		table.getColumnModel().getColumn(6).setMaxWidth(100);
+		table.getColumnModel().getColumn(7).setMinWidth(50);
+		table.getColumnModel().getColumn(7).setMaxWidth(50);
+		table.getColumnModel().getColumn(8).setMinWidth(70);
+		table.getColumnModel().getColumn(8).setMaxWidth(70);
+		table.getColumnModel().getColumn(9).setMinWidth(50);
+		table.getColumnModel().getColumn(9).setMaxWidth(50);
+		
+		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 1);
+		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 2);
+		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 4);
+		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 6);
+		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 7);
+		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 8);
+		JTableUtil.setCellsAlignment(table, SwingConstants.CENTER, 9);
+		table.setRowHeight(37);		
+		JScrollPane tablePane = new JScrollPane(table);
+		
+		JPanel cfloor1 = new JPanel();
+		cfloor1.setLayout(new BoxLayout(cfloor1, BoxLayout.X_AXIS));
+		cfloor1.setMaximumSize(new Dimension(2000, 37));
+		cfloor1.setBorder(BorderFactory.createLineBorder(borderColor, 1));
+		cfloor.add(cfloor1);
+		cfloor.add(Box.createVerticalStrut(10));
+		JLabel lb1 = new JLabel("Đăng ký học phần đợt: ");
+		cfloor1.add(lb1);
+		JComboBox<DotDangKyHocPhan> cb1 = new JComboBox<DotDangKyHocPhan>();
+		cfloor1.add(cb1);
+		cb1.setMaximumSize(new Dimension(200, 37));
+		Query q1 = session.createQuery("FROM DotDangKyHocPhan");
+		java.util.List<DotDangKyHocPhan> dotdangkylist = q1.list();
+		for(DotDangKyHocPhan t : dotdangkylist) {
+			if(t.getHocky().equals(hockyhientai)) {
+				cb1.addItem(t);
+			}
+		}
+		JButton xem = new JButton("Xem danh sách học phần");
+		xem.setMaximumSize(new Dimension(250, 37));
+		cfloor1.add(xem);
+		cfloor1.add(Box.createHorizontalGlue());
+//		JButton xoaddkhp = new JButton("Xóa đợt đăng ký học phần này");
+//		cfloor1.add(xoaddkhp);
+		
+		JLabel lb2 = new JLabel();
+		lb2.setVisible(false);
+		lb2.setForeground(new Color(45, 134, 89));
+		
+		xem.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					for(int i = table.getRowCount() - 1; i >= 0; i--) {
+						dTable.removeRow(i);
+					}
+					session.getTransaction().begin();
+					int id = ((DotDangKyHocPhan)cb1.getSelectedItem()).getMadot();
+					DotDangKyHocPhan temp = session.get(DotDangKyHocPhan.class, id);
+					session.refresh(temp);
+					Set<LichHoc> hocphanlist = temp.getDanhSachHocPhan();
+					if(hocphanlist != null && hocphanlist.isEmpty() == false) {
+						for(LichHoc lh : hocphanlist) {
+							MonHoc mht = lh.getMonhoc();
+							Object ob[] = {false, lh.getMathongtin(), mht.getMamonhoc(), mht.getTenmonhoc(), mht.getSotinchi(), lh.getGiaovien(), lh.getPhonghoc(), lh.getNgaythu(), lh.getCahoc(), lh.getSlots()};
+							dTable.addRow(ob);
+						}
+					}
+					
+					session.getTransaction().commit();
+				    lb2.setText(((DotDangKyHocPhan)cb1.getSelectedItem()).toLabel() + " ");
+				    lb2.setVisible(true);				    
+				}
+			}
+		});
+		JPanel cfloor2 = new JPanel();
+		cfloor2.setLayout(new BoxLayout(cfloor2, BoxLayout.X_AXIS));
+		cfloor2.add(lb2);
+		cfloor.add(cfloor2);
+		cfloor.add(tablePane);
+		cfloor.add(statusCapNhat);
+		//--------------------------------------------------------------------
 		westPanel.setLayout(new BoxLayout(westPanel, BoxLayout.Y_AXIS));
 		westPanel.setPreferredSize(new Dimension(150, 0));
 		westPanel.add(Box.createVerticalGlue());
 		JPanel floor = new JPanel();
-		floor.setLayout(new GridLayout(3,1));
-		
+		floor.setLayout(new GridLayout(5,1));		
 		floor.add(home);
 		
-		westPanel.add(floor);			
+		JButton taodotdangky = new JButton("<html><center> Thêm đợt <br> đăng ký mới </center><html>");
+		taodotdangky.setForeground(mainColor);
+		floor.add(taodotdangky);
+		taodotdangky.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					ThemDotDangKyHocPhanFrame themDDKHPFrame = new ThemDotDangKyHocPhanFrame(session, hockyhientai);
+					themDDKHPFrame.getOk().addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							if(SwingUtilities.isLeftMouseButton(e)) {
+								DotDangKyHocPhan temp = themDDKHPFrame.getDdkhp();
+								cb1.addItem(temp);
+							}
+						}
+					});
+				}
+			}
+		});
 		
+		JButton themhocphan = new JButton("Thêm học phần");
+		themhocphan.setForeground(mainColor);
+		floor.add(themhocphan);
+		themhocphan.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					ThemHocPhanFrame themHPF = new ThemHocPhanFrame(session, hockyhientai);
+					themHPF.getOk().addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseReleased(MouseEvent e) {
+							if(SwingUtilities.isLeftMouseButton(e)) {
+								LichHoc lh = themHPF.getLichHoc();
+								MonHoc mht = lh.getMonhoc();
+								Object ob[] = {false, lh.getMathongtin(), mht.getMamonhoc(), mht.getTenmonhoc(), mht.getSotinchi(), lh.getGiaovien(), lh.getPhonghoc(), lh.getNgaythu(), lh.getCahoc(), lh.getSlots()};
+								dTable.addRow(ob);
+								
+								session.getTransaction().begin();
+								ChiTiet ct = new ChiTiet(lh.getMathongtin(), ((DotDangKyHocPhan)cb1.getSelectedItem()).getMadot());
+								session.save(ct);
+								session.getTransaction().commit();
+							}
+						}
+					});
+				}
+			}
+		});
+		
+		JButton xoahocphan = new JButton("Xóa học phần");
+		xoahocphan.setForeground(mainColor);
+		floor.add(xoahocphan);
+		xoahocphan.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					for(int i = 0; i < table.getRowCount(); ++i) {
+						if(dTable.getValueAt(i, 0).toString() == "true") {
+							session.getTransaction().begin();
+							int mtt = Integer.parseInt(dTable.getValueAt(i, 1).toString());
+							int md = ((DotDangKyHocPhan)cb1.getSelectedItem()).getMadot();
+							LichHoc temp = session.get(LichHoc.class, mtt);
+							Query q3 = session.createQuery("DELETE FROM ChiTiet WHERE mathongtin =: mtt");
+							q3.setParameter("mtt", mtt);
+							q3.executeUpdate();
+							
+							Query q4 = session.createQuery("DELETE FROM DangKy WHERE mathongtin =: mtt");
+							q4.setParameter("mtt", mtt);	
+							q4.executeUpdate();							
+							session.getTransaction().commit();					
+							
+							session.getTransaction().begin();
+							session.delete(temp);							
+							session.getTransaction().commit();													
+							dTable.removeRow(i);
+							i--;
+							statusCapNhat.setText("Đã xóa các học phần đã chọn!");
+							showStatusCapNhat();
+						}
+					}
+				}
+			}
+		});
+		
+		JButton xemdanhsach = new JButton("<html><center> Xem danh sách <br> SV đăng ký </center><html>");
+		xemdanhsach.setForeground(mainColor);
+		floor.add(xemdanhsach);
+		xemdanhsach.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					for(int i = 0; i < table.getRowCount(); ++i) {
+						if(dTable.getValueAt(i, 0).toString() == "true") {
+							int mtt = Integer.parseInt(dTable.getValueAt(i, 1).toString());
+							LichHoc temp = session.get(LichHoc.class, mtt);
+							new XemDanhSachSinhVienDangKyFrame(temp);
+						}						
+					}
+				}
+			}
+		});
+		
+		westPanel.add(floor);		
 		westPanel.add(Box.createVerticalGlue());
 		westPanel.setVisible(false);
 		westPanel.setVisible(true);		

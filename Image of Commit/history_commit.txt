@@ -65,3 +65,7 @@ component lên JTable
 [+5 điểm]
 19.png: 22h13 ngày 30/05/2021
 --> Hoàn thành chức năng quản lý học kỳ
+
+[+20 điểm]
+20.png: 22h20 ngày 31/05/2021
+--> Hoàn thành các chức năng trong cụm quản lý lớp học 

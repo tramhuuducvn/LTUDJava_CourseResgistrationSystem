@@ -37,6 +37,20 @@ public class LichHoc implements Serializable{
 	//-------------------------------------------------------------
 	public LichHoc() {}
 	
+	public LichHoc(int mathongtin, HocKy hocky, MonHoc monhoc, String giaovien, String phonghoc, int ngaythu, int cahoc,
+			int slots) {
+		this.mathongtin = mathongtin;
+		this.hocky = hocky;
+		this.monhoc = monhoc;
+		this.giaovien = giaovien;
+		this.phonghoc = phonghoc;
+		this.ngaythu = ngaythu;
+		this.cahoc = cahoc;
+		this.slots = slots;
+	}
+
+
+
 	public int getMathongtin() {
 		return mathongtin;
 	}

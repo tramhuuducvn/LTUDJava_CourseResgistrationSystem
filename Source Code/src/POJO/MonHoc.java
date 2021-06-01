@@ -60,9 +60,11 @@ public class MonHoc implements Serializable{
 		this.sotinchi = sotinchi;
 	}
 	
+	@Override
 	public String toString() {
-		return this.mamonhoc + ", " + this.tenmonhoc + ",TC: " + this.sotinchi;
+		return this.mamonhoc + "-" + this.tenmonhoc;
 	}
+	
 	
 	public static void main(String[] args) {
 		System.out.println("Hello World");
