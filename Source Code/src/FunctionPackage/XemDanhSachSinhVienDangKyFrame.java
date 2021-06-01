@@ -13,6 +13,9 @@ import org.hibernate.*;
 
 public class XemDanhSachSinhVienDangKyFrame extends JFrame{
 	final Color borderColor = new Color(200, 126, 74);
+	
+	private int demCapNhat = 0;
+	JLabel statusCapNhat;	
 	public XemDanhSachSinhVienDangKyFrame(LichHoc lichhoc) {
 		Set<SinhVien> ds = lichhoc.getDanhSachSinhVien();
 		setLayout(new BorderLayout(3, 3));
@@ -23,7 +26,20 @@ public class XemDanhSachSinhVienDangKyFrame extends JFrame{
 		add(centerPanel, BorderLayout.CENTER);
 //		northPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
 		centerPanel.setBorder(BorderFactory.createLineBorder(borderColor, 1));
-		centerPanel.setLayout(new GridLayout(1,1));
+		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+		
+		JPanel cfloor2 = new JPanel();
+		cfloor2.setLayout(new BoxLayout(cfloor2, BoxLayout.X_AXIS));
+		cfloor2.setMaximumSize(new Dimension(2000, 37));
+		JLabel findLabel = new JLabel(" Nhập MSSV: ");
+		cfloor2.add(findLabel);
+		JTextField findTextField = new JTextField();
+		cfloor2.add(findTextField);
+		JButton find = new JButton("Tìm kiếm");
+		find.setMaximumSize(new Dimension(125, 37));
+		cfloor2.add(find);
+		centerPanel.add(cfloor2);
+		
 		
 		String columns[] = {"MSSV", "Họ tên", "Giới tính", "Lớp", "Email"};
 		DefaultTableModel dTable = new DefaultTableModel(columns, 0);
@@ -71,6 +87,29 @@ public class XemDanhSachSinhVienDangKyFrame extends JFrame{
 			}
 		}
 		
+		statusCapNhat = new JLabel();
+		centerPanel.add(statusCapNhat);
+		find.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e)) {
+					boolean flag = false;
+					for(int i = 0; i < table.getRowCount(); ++i) {
+						if(dTable.getValueAt(i, 0).equals(findTextField.getText())) {
+							flag = true;
+							table.setRowSelectionInterval(i, i);
+							table.scrollRectToVisible(table.getCellRect(i, 0, true));
+							statusCapNhat.setVisible(false);
+						}
+					}
+					if(!flag) {
+						statusCapNhat.setText("Không tìm thấy sinh viên này!");
+						statusCapNhat.setForeground(new Color(255, 107, 107));
+						statusCapNhat.setVisible(true);
+					}
+				}
+			}
+		});
 		
 		setTitle("Danh sách sinh viên đăng ký học phần mã " + lichhoc.getMathongtin() + "___Môn: " + lichhoc.getMonhoc().getTenmonhoc());
 		setSize(970, 670);

@@ -156,6 +156,10 @@ insert into DangKy(mathongtin, mssv) values
 (2, 19120707),
 (2, 19120729);
 
+insert into ChiTiet(mathongtin, madot) values
+(1, 1),
+(2, 1);
+
 update LopHoc
 set siso = (select count(mssv) from SinhVien where lop = '19CTT1' group by lop)
 where malop = '19CTT1';

@@ -15,6 +15,14 @@ public class DangKy implements Serializable{
 	private String mssv;
 	//Method-----------------------------------------------------	
 	public DangKy() {}
+	
+	
+	public DangKy(int mathongtin, String mssv) {
+		this.mathongtin = mathongtin;
+		this.mssv = mssv;
+	}
+
+
 	//-----------------------------------------------------------
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub

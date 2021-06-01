@@ -23,7 +23,8 @@ nhưng mapping chưa thành công
 chạy thử nghiệm một số thao tác đơn giản --> thành công
 
 7.png: 23h15 ngày 25/05/2021
---> Lên ý tưởng giao diện, tạo gói MainPackage là nơi chứa các lớp điều khiển
+--> Lên ý tưởng giao diện, tạo gói MainPackage là nơi chứa các lớp
+điều khiển
 chính, và show giao diện
 
 8.png: 17h37 ngày 26/05/2021
@@ -69,3 +70,7 @@ component lên JTable
 [+20 điểm]
 20.png: 22h20 ngày 31/05/2021
 --> Hoàn thành các chức năng trong cụm quản lý lớp học 
+
+[+40 điểm]
+21.png: 16h43 ngày 01/06/2021
+--> Hoàn thành các chức năng trong cụm Quản lý đăng ký học phần

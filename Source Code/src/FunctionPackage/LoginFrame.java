@@ -177,7 +177,7 @@ public class LoginFrame extends JFrame{
 								status.setForeground(new Color(9, 117, 10));
 								status.setVisible(true);
 								
-								System.out.println(gv.toString());
+//								System.out.println(gv.toString());
 								GiaoVuFrame gvm = new GiaoVuFrame(gv, session);
 //								session.close();
 								dispose();
@@ -199,7 +199,7 @@ public class LoginFrame extends JFrame{
 								status.setForeground(new Color(9, 117, 10));
 								status.setVisible(true);
 								
-								System.out.println(sv.toString());								
+//								System.out.println(sv.toString());								
 								SinhVienFrame svm = new SinhVienFrame(sv, session);
 //								session.close();
 								dispose();

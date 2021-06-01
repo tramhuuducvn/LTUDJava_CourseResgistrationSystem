@@ -47,7 +47,7 @@
 	- Quản lý đăng ký học phần: (40 điểm) (tương đương chức năng 7, 8, 9)
 		- xem danh sách các đợt(kỳ) đăng ký học phần
 		* tạo một đợt(kỳ) đăng ký học phần mới cho học kỳ hiện tại
-		- xem danh sách, tìm các học kỳ mở trong học kỳ hiện tại
+		- xem danh sách, tìm các học phần mở trong học kỳ hiện tại
 		* Thêm, xóa một học phần
 		- Xem danh sách, tìm kiếm sinh viên đăng ký trong một học phần
 
@@ -57,11 +57,13 @@
 		- cập nhật thông tin cá nhân,
 		- thay đổi mật khẩu.
 
-	- Đăng ký học phần: (15 điểm) (tương đương chức năng 10)
+	- Đăng ký học phần: (15 điểm) (tương đương chức năng 10, 12)
 		- Mỗi sinh viên đăng ký tối đa 8 môn
 		- Sinh viên không được đăng ký 2 môn trùng giờ(thứ mấy, ca mấy)
-
-	- Xem danh sách học phần đã đăng ký: (15 điểm) (tương đương chức năng 11, 12)
 		- Xóa một học phần đã đăng ký nếu còn hạn
+
+	- Xem danh sách học phần đã đăng ký: (15 điểm) (tương đương chức
+	 năng 11)
+		
 
 <19120484 - Trầm Hữu Đức>

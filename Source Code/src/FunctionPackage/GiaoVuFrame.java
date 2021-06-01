@@ -214,6 +214,7 @@ public class GiaoVuFrame extends JFrame{
 		centerPanel.setVisible(false);
 		centerPanel.setVisible(true);
 	}
+	
 	private int demCapNhat = 0;
 	JLabel statusCapNhat;
 	public void showStatusCapNhat() {
@@ -224,6 +225,7 @@ public class GiaoVuFrame extends JFrame{
 		statusCapNhat.setVisible(true);
 		demCapNhat++;
 	}
+	
 	public void thongtintaikhoanClickAction() {			
 			centerPanel.removeAll();
 			westPanel.removeAll();
