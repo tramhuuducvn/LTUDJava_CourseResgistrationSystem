@@ -499,8 +499,12 @@ public class SinhVienFrame extends JFrame{
 		table2.setRowHeight(37);		
 		JScrollPane tablePane2 = new JScrollPane(table2);
 		cfloor.add(tablePane2);
+		cfloor.add(statusCapNhat);
 		
-		Set<LichHoc> hpMolist = ddkhp.getDanhSachHocPhan();
+		Set<LichHoc> hpMolist = null;
+		if(ddkhp != null) {
+			hpMolist = ddkhp.getDanhSachHocPhan();
+		}
 		if(hpMolist != null && hpMolist.isEmpty() == false) {
 			for(LichHoc lh : hpMolist) {
 				if(hpddklist.contains(lh) == false) {
@@ -526,21 +530,59 @@ public class SinhVienFrame extends JFrame{
 	    	@Override
 	    	public void mouseReleased(MouseEvent e) {
 	    		if(SwingUtilities.isLeftMouseButton(e)) {
+	    			int check = table1.getRowCount();
 	    			for(int i = 0; i < table2.getRowCount(); ++i) {
 	    				if(dTable2.getValueAt(i, 0).equals(true)) {
-	    					int mtt = Integer.parseInt(dTable2.getValueAt(i, 1).toString());
-	    					LichHoc lh = session.get(LichHoc.class, mtt);
-	    					MonHoc mht = lh.getMonhoc();	    					
-	    					Object ob[] = {false, lh.getMathongtin(), mht.getMamonhoc(), mht.getTenmonhoc(), mht.getSotinchi(), lh.getGiaovien(), lh.getPhonghoc(), lh.getNgaythu(), lh.getCahoc(), lh.getSlots()};
-	    					dTable1.addRow(ob);
-	    					
-	    					session.getTransaction().begin();
-	    					DangKy dk = new DangKy(Integer.parseInt(dTable2.getValueAt(i, 1).toString()), sv.getMssv());
-	    					session.save(dk);
-	    					session.getTransaction().commit();
-	    					dTable2.removeRow(i); 
-	    					i--;
+	    					check++;
 	    				}
+	    			}
+	    			
+	    			if(check == 0) {
+	    				statusCapNhat.setText("Bạn chưa chọn môn nào!");
+	    				showStatusCapNhat();
+	    			}else if(check <= 8) {
+	    				boolean b1 = false;
+		    			for(int i = 0; i < table2.getRowCount(); ++i) {
+		    				b1 = false;
+		    				if(dTable2.getValueAt(i, 0).equals(true)) {
+		    					int mtt = Integer.parseInt(dTable2.getValueAt(i, 1).toString());
+		    					LichHoc lh = session.get(LichHoc.class, mtt);		    					
+		    					
+		    					for(int j = 0; j < table1.getRowCount(); ++j) {
+		    						int mttc = Integer.parseInt(dTable1.getValueAt(j, 1).toString());
+			    					LichHoc c = session.get(LichHoc.class, mttc);
+		    						if(c.getNgaythu() == lh.getNgaythu() && c.getCahoc() == lh.getCahoc()) {
+		    							statusCapNhat.setText("Bạn không thể đăng ký học phần có mã số " + lh.getMathongtin() + " vì trùng lịch!");
+		    							showStatusCapNhat();
+		    							b1 = true;
+		    							break;
+		    						}
+		    					}		    					
+		    					
+		    					if(b1 == true) {
+		    						continue;
+		    					}
+		    					
+		    					MonHoc mht = lh.getMonhoc();	    					
+		    					Object ob[] = {false, lh.getMathongtin(), mht.getMamonhoc(), mht.getTenmonhoc(), mht.getSotinchi(), lh.getGiaovien(), lh.getPhonghoc(), lh.getNgaythu(), lh.getCahoc(), lh.getSlots()};
+		    					dTable1.addRow(ob);
+		    					
+		    					session.getTransaction().begin();
+		    					DangKy dk = new DangKy(Integer.parseInt(dTable2.getValueAt(i, 1).toString()), sv.getMssv());
+		    					session.save(dk);
+		    					session.getTransaction().commit();
+		    					dTable2.removeRow(i); 
+		    					i--;
+		    				}
+		    			}
+		    			if(b1 != true) {
+			    			statusCapNhat.setText("Đăng ký thành công!");
+		    				showStatusCapNhat();
+		    			}
+	    			}
+	    			else {
+	    				statusCapNhat.setText("Bạn chỉ được phép đăng ký tối đa 8 học phần!");
+	    				showStatusCapNhat();
 	    			}
 	    		}
 	    	}

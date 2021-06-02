@@ -106,7 +106,7 @@ public class LoginFrame extends JFrame{
 		JPanel floor5 = new JPanel();
 		floor5.setLayout(new BoxLayout(floor5, BoxLayout.X_AXIS));
 		JLabel taikhoanLabel = new JLabel(" User :         ");
-		JTextField taikhoanTextField = new JTextField("GV102");
+		JTextField taikhoanTextField = new JTextField();
 		floor5.add(taikhoanLabel);
 		floor5.add(taikhoanTextField);
 		floor5.setMaximumSize(new Dimension(2000, 37));
@@ -115,7 +115,7 @@ public class LoginFrame extends JFrame{
 		JPanel floor6 = new JPanel();
 		floor6.setLayout(new BoxLayout(floor6, BoxLayout.X_AXIS));
 		JLabel matkhauLabel = new JLabel(" Password : ");
-		JPasswordField matkhauTextField = new JPasswordField("102");
+		JPasswordField matkhauTextField = new JPasswordField();
 		floor6.setMaximumSize(new Dimension(2000, 37));
 		floor6.add(matkhauLabel);
 		floor6.add(matkhauTextField);

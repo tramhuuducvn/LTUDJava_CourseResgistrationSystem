@@ -45,6 +45,5 @@ public class Main {
 				LoginFrame main = new LoginFrame();
 			}
 		});		
-	}
-}
+	}}
 

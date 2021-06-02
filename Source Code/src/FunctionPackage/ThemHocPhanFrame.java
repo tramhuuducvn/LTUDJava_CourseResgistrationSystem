@@ -15,8 +15,8 @@ import org.hibernate.exception.*;
 
 public class ThemHocPhanFrame extends JFrame{
 	private LichHoc lh;
-	JButton ok;
-	JButton cancel;
+	private JButton ok;
+	private JButton cancel;
 	public ThemHocPhanFrame(Session session, HocKy hk) {		
 		JPanel floor = new JPanel();
 		floor.setLayout(new BoxLayout(floor, BoxLayout.Y_AXIS));
@@ -120,15 +120,15 @@ public class ThemHocPhanFrame extends JFrame{
 							flag = true;
 						}
 					}
-					if(!flag) {
+					if(flag != true) {
 						session.getTransaction().begin();
 						session.save(lh);
 						session.getTransaction().commit();
 						dispose();	
-					}
+					}					
 					else {
 						lb7.setVisible(true);
-					}									
+					}
 				}
 			}
 		});		

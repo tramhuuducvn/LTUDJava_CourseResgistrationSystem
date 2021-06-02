@@ -1361,17 +1361,17 @@ public class GiaoVuFrame extends JFrame{
 						@Override
 						public void mouseReleased(MouseEvent e) {
 							if(SwingUtilities.isLeftMouseButton(e)) {
-								LichHoc lh = themHPF.getLichHoc();
-								MonHoc mht = lh.getMonhoc();
-								Object ob[] = {false, lh.getMathongtin(), mht.getMamonhoc(), mht.getTenmonhoc(), mht.getSotinchi(), lh.getGiaovien(), lh.getPhonghoc(), lh.getNgaythu(), lh.getCahoc(), lh.getSlots()};
-								dTable.addRow(ob);
-								
-								session.getTransaction().begin();
-								ChiTiet ct = new ChiTiet(lh.getMathongtin(), ((DotDangKyHocPhan)cb1.getSelectedItem()).getMadot());
-								session.save(ct);
-								session.getTransaction().commit();
+									LichHoc lh = themHPF.getLichHoc();
+									MonHoc mht = lh.getMonhoc();
+									Object ob[] = {false, lh.getMathongtin(), mht.getMamonhoc(), mht.getTenmonhoc(), mht.getSotinchi(), lh.getGiaovien(), lh.getPhonghoc(), lh.getNgaythu(), lh.getCahoc(), lh.getSlots()};
+									dTable.addRow(ob);
+									
+									session.getTransaction().begin();
+									ChiTiet ct = new ChiTiet(lh.getMathongtin(), ((DotDangKyHocPhan)cb1.getSelectedItem()).getMadot());
+									session.save(ct);
+									session.getTransaction().commit();
+								}
 							}
-						}
 					});
 				}
 			}
